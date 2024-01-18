@@ -1,0 +1,9 @@
+Hey [USER_NAME],
+
+A new comment has been posted on your project request for [PROJECT_NAME].
+
+Commented:
+
+        [COMMENT]
+
+[LINK]

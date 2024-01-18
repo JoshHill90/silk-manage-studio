@@ -1,0 +1,266 @@
+{% extends 'panel.html' %}
+{% block title %}Project {{ project.name }} {% endblock %}
+{% block content %}
+{% load tz %}
+{% load static %}
+
+<div class='row mt-4 mb-4'>
+	<div col='col-12'>
+		<div class='section-min'>
+			<div class='row'>
+				<div class='col-12 col-md-4'>
+					<h1 class='h1-1'>
+						Project: {{project.name|title}}
+					</h1>
+				</div>		
+				<div class='col-4 mt-1 col-md-1'>
+					<button  class='btn-icon w-100' id="detailsBtnCal" onclick="handleModal('detailsWindowCal', 'detailsBtnCal', 'closeDetailsCal')">
+						<i class="fa-regular fa-calendar-plus fa-2xl"></i>
+					</button>
+				</div>	
+				<div class='col-4 mt-1 col-md-1'>
+					<button  class='btn-icon w-100'
+					id="detailsBtnNote" 
+					onclick="handleModal('detailsWindowNote', 'detailsBtnNote', 'closeDetailsNote')">
+						<i class="fa-regular fa-note-sticky fa-2xl"></i>
+					</button>
+				</div>	
+				<div class='col-4 mt-1 col-md-1'>
+					<button  class='btn-icon w-100'
+					id="detailsBtnInv" 
+					onclick="handleModal('detailsWindowInv', 'detailsBtnInv', 'closeDetailsInv')">
+						<i class="fa-solid fa-file-invoice-dollar fa-2xl"></i>
+					</button>
+				</div>	
+				<div class='col-4 mt-1 col-md-1'>
+					<button  class='btn-icon w-100'
+					id="detailsBtnTerms" 
+					onclick="handleModal('detailsWindowTerms', 'detailsBtnTerms', 'closeDetailsTerms')">
+						<i class="fa-regular fa-folder-open fa-2xl"></i>
+					</button>
+				</div>
+				<div class='col-4 mt-1 col-md-1'>
+					<button  class='btn-icon w-100'
+					id="detailsBtnGal" 
+					onclick="handleModal('detailsWindowGal', 'detailsBtnGal', 'closeDetailsGal')">
+						<i class="fa-regular fa-images fa-2xl"></i>
+					</button>
+				</div>	
+				<div class='col-4 mt-1 col-md-1'>
+					<button  class='btn-icon w-100'
+					id="detailsBtnDel" 
+					onclick="handleModal('detailsWindowDel', 'detailsBtnDel', 'closeDetailsDel')">
+						<i class="fa-solid fa-folder-minus fa-2xl"></i>
+					</button>
+				</div>	
+				
+			</div>
+			<hr>
+		</div>		
+	</div>
+	<div class='col-12 mt-4 mb-4 col-md-6'>
+		<div class='section-min'>
+			<div class='cardSlide'>
+				<h1 class='h1-1'>
+					Project status
+				</h1>
+				<h1 class='nums'>
+					{{project.status|title}}
+				</h1>
+		
+			</div>	
+		</div>		
+	</div>
+	<div class='col-12 col-md-6'>
+		<div class='section-small'>
+
+			<h1 class='h1-1 text-center'>Billing Overview</h1>
+			
+
+			{% for biiling in billing_set%}
+			<div class="mini-Slides text-center">
+
+				<div class='cardSlide'>
+					<h1 class='h1-1'> 
+						{{ biiling.type|title }}
+					</h1>
+					
+					<h1 class='mt-4 nums'>
+						${{ biiling.cost|title }}
+					</h1>
+						
+
+				</div>
+			</div>
+		
+			{% endfor %}
+
+			<div class='section-min text-center mt-4'>
+
+			
+				<button class="btn-icon" onclick="plusSlides(-1)"><i class="fa-solid fa-circle-arrow-left fa-2xl"></i></button>
+
+				<button class="btn-icon" onclick="plusSlides(1)"><i class="fa-solid fa-circle-arrow-right fa-2xl"></i></button>
+			</div>	
+		</div>
+	</div>
+
+</div>
+
+<div class='row mt-4 mb-4'>
+	<div class='col-12 mt-4 mb-4 col-md-4'>
+		<div class='section-min'>
+			
+			<h1 class='h1-1'>
+				Upcoming Evnets
+			</h1>
+			<hr>
+			<div class='row'>
+				
+			{% for date in project_events %}
+
+				<div class='col-6'>
+					<p class='p-p'>
+					{{ date.date|date:'m/d/y' }}
+					</p>
+				</div>
+				<div class='col-6'>
+					<p class='p-p'>
+					{{ date.event_type }}
+					</p>
+				</div>
+				<hr>
+			{% endfor %}
+			</div>
+		</div>		
+	</div>
+
+	<div class='col-12 mt-4 mb-4 col-md-4'>
+		<div class='section-min'>
+			<h1 class='h1-1'>
+				Documents
+			</h1>
+			<hr>
+			<div class='row'>
+				
+			{% for doc in document %}
+
+				<div class='col-3'>
+					<p class='p-p'>
+					{{ doc.name }}
+					</p>
+				</div>
+				<div class='col-3'>
+					<p class='p-p'>
+					{{ doc.file_path }}
+					</p>
+				</div>
+				<div class='col-3'>
+					<p class='p-p'>
+					{{ doc.type }}
+					</p>
+				</div>
+				<div class='col-3'>
+					<p class='p-p'>
+					{{ doc.kind }}
+					</p>
+				</div>
+				<hr>
+			{% endfor %}
+			</div>
+		</div>		
+	</div>
+
+	<div class='col-12 mt-4 mb-4 col-md-4'>
+		<div class='section-min'>
+			<h1 class='h1-1'>
+				Invoices
+			</h1>
+			<hr>
+			<div class='row'>
+
+					
+			{% for bill in billing_list %}
+				<div class='col-4 col-md-3'>
+					<p class='p-p'>
+					{{ bill.status }}
+					</p>
+				</div>
+				<div class='col-4 col-md-3'>
+					<p class='p-p'>
+					{{ bill.due_date|date:'m/d/y' }}
+					</p>
+				</div>
+				<div class='col-4 col-md-3'>
+					<p class='p-p'>
+					{{ bill.billed }}
+					</p>
+				</div>
+				<div class='col-12 col-md-3'>
+					<div  class='btn-icon w-100 text-center'
+					id="detailsBtnInv{{ bill.id }}" 
+					onclick="handleModal('detailsWindowInv{{ bill.id }}', 'detailsBtnInv{{ bill.id }}', 'closeDetailsInv{{ bill.id }}')">
+					<i class="fa-solid fa-file-circle-exclamation fa-xl"></i>
+					</div>
+				</div>	
+				<hr>
+			{% endfor %}
+			</div>
+		</div>		
+	</div>
+</div>
+
+<!-- Project info -->
+{% include "o_panel/modals/projects/project-info-modal.html" %}
+
+<!-- New Event -->
+{% include "o_panel/modals/events/event-create-modal.html" %}
+
+<!-- Project notes  -->
+{% include "o_panel/modals/projects/notes-modal.html" %}
+
+<!-- new invoice -->
+{% include "o_panel/modals/invoice/invoice-crerate-modal.html" %}
+
+<!-- invoice with id  -->
+{% for bill in billing_list %}
+	{% include "o_panel/modals/invoice/invoice-details-modal.html" %}
+	{% include "o_panel/modals/invoice/submodals/invoice-edit-modal.html" %}
+	{% include "o_panel/modals/invoice/submodals/invoice-delete-modal.html" %}
+	{% include "o_panel/modals/invoice/submodals/invoice-cash-modal.html" %}
+	{% include "o_panel/modals/invoice/submodals/invoice-send-modal.html" %}
+{% endfor %}
+
+<!-- Delete Project -->
+{% include "o_panel/modals/projects/project-delete-modal.html" %}
+
+
+<script>
+	function initializeModals() {
+		console.log("Initializing modals...");
+		document.addEventListener("DOMContentLoaded", function() {
+			
+			handleModal('detailsWindowCal', 'detailsBtnCal', 'closeDetailsCal');
+			handleModal('detailsWindowTerms', 'detailsBtnTerms', 'closeDetailsTerms');
+			handleModal('detailsWindowNote', 'detailsBtnNote', 'closeDetailsNote');
+			handleModal('detailsWindowInv', 'detailsBtnInv', 'closeDetailsInv');
+			handleModal('detailsWindowDel', 'detailsBtnDel', 'closeDetailsDel');
+
+			{% for bill in billing_list %}
+			handleModal('detailsWindowInv{{ bill.id }}', 'detailsBtnInv{{ bill.id }}', 'closeDetailsInv{{ bill.id }}');
+			{% if bill.status == 'draft' or bill.status == 'open' %}
+			handleModal('detailsWindowInvCash{{ bill.id }}', 'detailsBtnInvCash{{ bill.id }}', 'closeDetailsInvCash{{ bill.id }}');
+			handleModal('detailsWindowInvDel{{ bill.id }}', 'detailsBtnInvDel{{ bill.id }}', 'closeDetailsInvDel{{ bill.id }}');
+			handleModal('detailsWindowInvEdit{{ bill.id }}', 'detailsBtnInvEdit{{ bill.id }}', 'closeDetailsInvEdit{{ bill.id }}');
+			handleModal('detailsWindowInvSend{{ bill.id }}', 'detailsBtnInvSend{{ bill.id }}', 'closeDetailsInvSend{{ bill.id }}');
+			{% endif %}
+			{% endfor %}
+		});
+
+	};
+	console.log(initializeModals());
+	initializeModals();
+</script>
+<script src="{% static 'js/invoice.js' %}"></script>
+<script src={% static 'js/mini_gallery.js' %}></script>
+{% endblock %}

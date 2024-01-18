@@ -1,0 +1,28 @@
+
+Dear [CLIENT_NAME],
+
+I hope this message finds you well. I am excited to inform you that a new project has been approved and is now available in your Project Binder.
+
+Project Details:
+- Project Name: [PROJECT_NAME]
+- [PAYMENT_TYPE] Invoice Number: [INVOICE_NUMBER]
+- [PAYMENT_TYPE] Due Date: [DUE_DATE]
+- [PAYMENT_TYPE] Amount Due: $[PAYMENT_DUE]
+
+To ensure a smooth process, please take the following actions:
+1. Click on the following link to view the project details: [PROJECT_LINK]
+2. Review the project scope and details carefully.
+3. Complete the attached questionnaire and upload it to your project details page.
+4. You can follow this link to view and make a payment for the [PAYMENT_TYPE]: [PAYMENT_LINK]
+5. Please make sure to complete the payment by the due date ([DUE_DATE]). Failure to do so may result in project cancellation.
+
+If you have any questions or require further assistance, please don't hesitate to contact me.
+
+Thank you for choosing Soft Subversion for your photography needs. I look forward to working with you on this exciting project!
+
+Carley Brown
+Photographer/Videographer 
+Soft Subversion 
+Website: softsubversion.com  
+Email: Carly@softsubversion.com
+

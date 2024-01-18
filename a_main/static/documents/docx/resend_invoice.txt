@@ -1,0 +1,19 @@
+Dear [CLIENT_NAME],
+I hope this message finds you well. I wanted to provide you with a brief update on the status of your ongoing project, [PROJECT_NAME], and draw your attention to the pending invoice associated with it.
+Invoice Summary:
+	• Invoice Number: [INVOICE_NUMBER]
+	• Due Date: [DUE_DATE]
+	• Amount Due: $[PAYMENT_DUE]
+To access and review the invoice details, please follow this link: [INVOICE_LINK].
+Your prompt attention to the following is greatly appreciated:
+	1. Review Invoice Details: Take a moment to thoroughly review the provided invoice details.
+	2. Make Payment: Initiate the [PAYMENT_TYPE] payment by utilizing the secure payment link: [PAYMENT_LINK].
+	3. Ensure Timely Payment: Please ensure the payment is completed on or before the due date ([DUE_DATE]) to avoid any potential disruptions to the project timeline.
+Should you have any questions or require clarification regarding the invoice or any other project-related matter, feel free to reach out to me.
+Thank you for your continued collaboration on this project. Your timely action on the invoice is crucial, and I appreciate your attention to this matter.
+Best regards,
+Carley Brown Photographer/Videographer 
+Soft Subversion 
+Website: softsubversion.com 
+Email: Carly@softsubversion.com
+

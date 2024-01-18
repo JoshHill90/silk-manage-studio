@@ -1,0 +1,19 @@
+Dear [CLIENT_NAME],
+I trust this email finds you well. I would like to update you on the current status of your ongoing project, [PROJECT_NAME]. Attached, you will find details regarding the recent invoice generated for your consideration.
+Invoice Details:
+	• [PAYMENT_TYPE] Invoice Number: [INVOICE_NUMBER]
+	• [PAYMENT_TYPE] Due Date: [DUE_DATE]
+	• [PAYMENT_TYPE] Amount Due: $[PAYMENT_DUE]
+To review the specifics of the invoice, kindly click on this link: [INVOICE_LINK].
+Prompt action on the following is appreciated:
+	1. Thoroughly review the invoice details.
+	2. Make the [PAYMENT_TYPE] payment using the provided link: [PAYMENT_LINK].
+	3. Ensure the payment is completed by the due date ([DUE_DATE]) to avoid any potential disruption to the project timeline.
+If you have any questions or require clarification on the invoice or any other project-related matter, please do not hesitate to contact me.
+Thank you for your continued collaboration on this project. I appreciate your prompt attention to the invoice details.
+Best regards,
+Carley Brown Photographer/Videographer 
+Soft Subversion 
+Website: softsubversion.com 
+Email: Carly@softsubversion.com
+

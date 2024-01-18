@@ -1,0 +1,65 @@
+/*font import*/
+@import url('https://fonts.googleapis.com/css2?family=Calistoga&family=Lato:wght@300;400;700&display=swap');
+
+/*variable*/
+:root{
+  --mc-1: #003004;
+  --mc-2: #006009;
+  --mc-3: #00900D;
+  --mc-4: #00C011;
+  --mc-5: #40D04D;
+  --mc-6: #80E088;
+  --mc-7: #BFEFC4;
+
+  --mc2-1: #040030;
+  --mc2-2: #090060;
+  --mc2-3: #0D0090;
+  --mc2-4: #1100C0;
+  --mc2-5: #4D40D0;
+  --mc2-6: #8880E0;
+  --mc2-7: #C4BFEF;
+
+  --mc3-1: #2C3000;
+  --mc3-2: #576000;
+  --mc3-3: #839000;
+  --mc3-4: #AFC000;
+  --mc3-5: #C3D040;
+  --mc3-6: #D7E080;
+  --mc3-7: #EBEFBF;
+
+  --bg-1: #030304;
+  --bg-2: #0c0d11;
+  --bg-3: #16161e;
+  --bg-4: #1f202b;
+  --bg-5: #62636b;
+  --bg-6: #a5a6aa;
+  --bg-7: #e9e9ea;
+
+  --mc-3-o: #00900c8e;
+  --mc-4-o: #00c01080;
+  --mc-5-o: #40d04c8c;
+
+
+  --text-color:var(--bg-7);
+  --text-color-secondary:rgb(121, 121, 121);
+  --bg-color:var(--bg-4);
+  --bg-color-secondary:linear-gradient(315deg, var(--mc-2), var(--mc-1));
+  --bg-shadow:  rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  --bg-color-nav:var(--bg-3);
+  --bg-color-opec:#979090a2;
+  --font-family: "Lato", sans-serif;
+  --h1: 25px;
+  --p: 16px;
+  --np:25px;
+  --nav-width: 70px;           
+  --first-color: var(--mc-3); 
+  --sec-color: var(--mc2-4);          
+  --first-color-light: var(--bg-5);          
+  --white-color: var(--mc-1);         
+  --border-light-color: var(--mc-7);                    
+  --z-fixed: 100;
+  --lingrand: linear-gradient(142deg, var(--mc-2) 0%, var(--mc2-2) 64%, var(--mc3-2) 100%);
+  --lingrand-bar: radial-gradient(circle, var(--mc-6) 0%, var(--mc-7) 64%, var(--mc-5) 100%);
+  --line-border-fill: var(--mc-5);
+  --line-border-empty: #13131300;
+}

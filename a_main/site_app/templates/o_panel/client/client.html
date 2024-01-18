@@ -1,0 +1,194 @@
+{% extends 'panel.html' %}
+{% block title %}O | Clients{% endblock %}
+{% block content %}
+{% load static %}
+
+
+<div class='row'>
+	<div class='col-12  order-md-2 col-md-6 mt-4 mb-4'>
+		<h1 class='h1-1'>Client Options</h1>
+		<hr>
+		<div class='section-min'>
+			<div class='row'>
+
+				<div class='col-6 mt-4'>
+					<a href="{% url 'invite' %}">
+						<div class='section-pad addLoader text-center' >
+						<i class="fa-solid fa-user-plus fa-2xl"></i>
+						<p class='mt-2'>Client Intake</p>
+						</div>
+					</a>
+				</div>
+				
+				<div class='col-6 mt-4'>
+					<a href="{% url 'invite' %}">
+							<div class='section-pad addLoader text-center' >
+							<i class="fa-solid fa-user-gear fa-2xl"></i>
+							<p class='mt-2'>Client settings</p>
+						</div>
+					</a>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<div class='col-12 order-md-1 col-md-6 mt-4 mb-4'>
+		
+		<h1 class='h1-1 mb-2'>Client Search and Filter</h1>
+		<hr>
+		<div class='sections-med'>
+			<form method="GET" action="." class='form-group'>
+				<div class='row'>
+					<div class='col-12 mb-2'>
+						<input class="form-control" list="project-list" type="search" name="project" placeholder="Project">
+						<datalist id="project-list">
+						{% for project in project_list %}
+							<option value="{{ project.name }}"></option>
+						{% endfor %}
+						</datalist>
+					</div>
+					<div class='col-12 mb-2'>
+						<input class="form-control" list="client-list" type="search" name="client" placeholder="Client">
+						<datalist id="client-list">
+						{% for client in client_info %}
+							<option value="{{ client.client_details.client }}"></option>
+						{% endfor %}
+						</datalist>
+					</div>
+				</div>
+				<div class='row'>
+					<div class="col-12 col-md-4 mt-4">
+						<select class="form-select" type="select" name="order">
+							<option value="Newest">Newest</option>
+							<option value="Oldest">Oldest</option>
+						</select>
+					</div>                
+					<div class="col-12 col-md-4 mt-4">
+						<button type="submit" class="btn-cust btn-cust-color mt-4">Search</button>
+					</div>
+					<div class="col-12 col-md-4 mt-4">
+						<button type="submit" onclick="{% url 'o-client' %}" class="btn-cust btn-cust-color mt-4">Clear</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+
+	<div class='col-12 order-md-3  mt-4'>
+		<div class="section-med">
+			<div class='row'>
+				<div class='col-12 mt-4 mb-4'>
+					{% if client_sets %}
+						{% if client_sets.has_other_pages %}
+						<div class="btn-group" role="group" aria-label="Item pagination">
+							{% if client_sets.has_previous %}
+								<button onclick="window.location.href='?page={{ client_sets.previous_page_number }}'" class="btn-icon">&laquo;</button>
+							{% endif %}
+		
+							{% for page_number in client_sets.paginator.page_range %}
+								{% if client_sets.number == page_number %}
+									<button class="btn-icon active">
+										<span>{{ page_number }} <span class="sr-only">(current)</span></span>
+									</button>
+								{% else %}
+									<button onclick="window.location.href='?page={{ page_number }}'" class="btn-icon">
+										{{ page_number }}
+									</button>
+								{% endif %}
+							{% endfor %}
+		
+							{% if client_sets.has_next %}
+								<button onclick="window.location.href='?page={{ client_sets.next_page_number }}'" class="btn-icon">&raquo;</button>
+							{% endif %}
+						</div>
+						{% endif %}
+					{% endif %}
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-12 text-center mt-4'>
+					<div class='row'>
+						<div class='col-6 col-md-3'>
+							<p class="p-p">
+								Client ID: 
+							</p>
+						</div>
+						<div class='col-6 col-md-3'>
+							<p class="p-p">
+								Client Name: 
+							</p>
+						</div>
+						<div class='col-6 col-md-3'>
+							<p class="p-p">
+								Projet Count: 
+							</p>
+						</div>
+						<div class='col-6 col-md-3'>
+							<p class="p-p">
+								Clent Details: 
+							</p>
+						</div>
+
+					</div>
+				</div>
+				<hr>
+				{% for clients in client_sets %}
+				<div class='col-12  text-center mt-4'>
+					<div class='row mt-1'>
+						<div class='col-6 col-md-3'>
+							<p class="p-p">
+								{{ clients.id }}
+							</p>
+						</div>
+						<div class='col-6 col-md-3'>
+							<p class="p-p">
+								{{ clients.user_id.first_name }} {{ clients.user_id.last_name }} 
+							</p>
+						</div>
+						<div class='col-6 col-md-3'>
+							<p class="p-p">
+								{% for project in project_list %}
+									{% if project.client_id == clients %}
+									{{ forloop.counter }}
+									{% endif %}
+								{% endfor %}
+							</p>
+						</div>
+
+						<div class='col-6 col-md-3'>
+							
+							<button class="btn-icon" id="detailsBtn{{ forloop.counter }}" onclick="handleModal('detailsWindow{{ forloop.counter }}', 'detailsBtn{{ forloop.counter }}', 'closeDetails{{ forloop.counter }}')">
+								Details
+							</button>
+
+						</div>
+					</div>
+					<hr>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	{% for clients in client_sets %}
+	{% include "o_panel/modals/clients/client-details-modal.html" %}
+	{% endfor %}
+</div>
+
+<script src={% static 'js/graphs.js' %}></script>
+<script>
+	function initializeModals() {
+		document.addEventListener("DOMContentLoaded", function() {
+		  {%  for clients in client_list %}
+			handleModal("detailsWindow{{ forloop.counter }}", "detailsBtn{{ forloop.counter }}", "closeDetails{{ forloop.counter }}");
+		  {% endfor %}
+		});
+	  };
+	initializeModals();
+</script>
+
+
+
+{% endblock %}

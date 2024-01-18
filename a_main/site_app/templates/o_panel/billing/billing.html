@@ -1,0 +1,261 @@
+{% extends 'panel.html' %}
+{% block title %}Billing{% endblock %}
+{% block content %}
+{% load static %}
+<div class='row mt-4 mb-4 '>
+	<div class='col-6'>
+		<div class='section-min'>
+
+			<h1 class='h1-1'>Billing Overview </h1>
+			<hr>
+			
+
+			{% for biiling in billing_set%}
+			<div class="mini-Slides text-center">
+				<div class="numbertext">
+				</div>
+				<div class='cardSlide'>
+					<h1 class='h1-1'> 
+						{{ biiling.type|title }}
+					</h1>
+					
+					<h1 class=' mt-4 nums'>
+						${{ biiling.cost|floatformat:'2' }}
+					</h1>
+						
+
+				</div>
+			</div>
+		
+			{% endfor %}
+			<div class='section-min text-center mt-4'>
+				<button class="btn-icon" onclick="plusSlides(-1)"><i class="fa-solid fa-circle-arrow-left fa-2xl"></i></button>
+
+				<button class="btn-icon" onclick="plusSlides(1)"><i class="fa-solid fa-circle-arrow-right fa-2xl"></i></button>
+			</div>
+		</div>
+	</div>
+	<div class='col-6'>
+		
+		<div class='section-small'>
+			<h1 class='h1-1 '>
+				Billing
+			</h1>
+			<hr>
+			<div class='row'>
+				<div class='col-6 mt-4'>
+						<div class='section-pad addLoader text-center'
+						id="detailsBtnInv" 
+						onclick="handleModal('detailsWindowInv', 'detailsBtnInv', 'closeDetailsInv')#detailsWindowInv"
+						>
+							<i class="fa-solid fa-file-invoice fa-2xl"></i>
+							<p class='mt-2'>Create Invoice</p>
+						</div>
+				</div>
+				<div class='col-6 mt-4'>
+					<a href="{% url 'o-project' %}">
+						<div class='section-pad addLoader text-center'>
+							<i class="fa-solid fa-sliders fa-2xl"></i>
+							<p class='mt-2'>Invoice Settings</p>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class='col-12 mt-4 mb-4'>
+		<div class='section-med'>
+			<div class='row'>
+				<h1 class='h1-1 '>
+					Invoice Search and Filter
+				</h1>
+				<hr>
+				<form method="GET" action="." class='form-group'>
+					<div class='row'>
+						<div class='col-8 mb-2'>	
+							<div class='row'>
+								<div class='col-12 mb-2'>
+									<input class="form-control" type="search" name="number" placeholder="Invoice Number">
+								</div>
+							</div>
+							<div class='row'>
+								<div class='col-12 mb-2'>
+									<input class="form-control" list="project-list" type="search" name="project" placeholder="Project">
+									<datalist id="project-list">
+									{% for project in project_list %}
+										<option value="{{ project.name }}"></option>
+									{% endfor %}
+									</datalist>
+								</div>
+								<div class='col-12 mb-2'>
+									<input class="form-control" list="client-list" type="search" name="client" placeholder="Client">
+									<datalist id="client-list">
+									{% for client in client_list %}
+										<option value="{{ client.name }}"></option>
+									{% endfor %}
+									</datalist>
+								</div>
+							</div>
+						</div>
+
+						<div class='col-2 text-center'>
+							<div class="form-check">
+								<input class="form-check-input" value="all" type="radio" name="fufiled" id="fufiled1" checked>
+								<label class="form-check-label p-p" for="fufiled1">All</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" value='draft' type="radio" name="fufiled" id="fufiled2">
+								<label class="form-check-label p-p" for="fufiled2">Draft</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" value='open' type="radio" name="fufiled" id="fufiled3">
+								<label class="form-check-label p-p" for="fufiled3">Open</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" value='paid' type="radio" name="fufiled" id="fufiled4">
+								<label class="form-check-label p-p" for="fufiled4">Paid</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" value='void' type="radio" name="fufiled" id="fufiled5">
+								<label class="form-check-label p-p" for="fufiled5">Void</label>
+							</div>
+						</div>
+					</div>
+					<div class='row'>
+						<div class="col-2 mt-4">
+							<select class="form-select" type="select" name="order">
+								<option value="Newest">Newest</option>
+								<option value="Oldest">Oldest</option>
+							</select>
+						</div>                
+						<div class="col-5">
+							<button type="submit" class="btn-cust">Search</button>
+						</div>
+						<div class="col-5">
+							<button type="submit" class="btn-cust">Clear Search</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class='row'>
+				<div class='col-12 mt-4 mb-4'>
+					{% if invoices %}
+						{% if invoices.has_other_pages %}
+						<div class="btn-group" role="group" aria-label="Item pagination">
+							{% if invoices.has_previous %}
+								<button onclick="window.location.href='?page={{ invoices.previous_page_number }}'" class="btn-icon">&laquo;</button>
+							{% endif %}
+
+							{% for page_number in invoices.paginator.page_range %}
+								{% if invoices.number == page_number %}
+									<button class="btn-icon active">
+										<span>{{ page_number }} <span class="sr-only">(current)</span></span>
+									</button>
+								{% else %}
+									<button onclick="window.location.href='?page={{ page_number }}'" class="btn-icon">
+										{{ page_number }}
+									</button>
+								{% endif %}
+							{% endfor %}
+
+							{% if invoices.has_next %}
+								<button onclick="window.location.href='?page={{ invoices.next_page_number }}'" class="btn-icon">&raquo;</button>
+							{% endif %}
+						</div>
+						{% endif %}
+					{% else %}
+						<p>No items found.</p>
+					{% endif %}
+				</div>
+			</div>
+			<div class='row mt-1'>
+				<div class='col-12'>
+						<div class='row mt-1 text-center' style='width:95%'>
+							<div class='col-6 col-md-3'>
+								<p class="p-p">Due Date</p>
+							</div>
+							<div class='col-6 col-md-2'>
+								<p class="p-p">Status</p>
+							</div>
+							<div class='col-6 col-md-3'>
+								<p class="p-p"> Client</p>
+							</div>
+							<div class='col-6 col-md-2'>
+								<p class="p-p">Billed</p>
+							</div>
+						</div>
+					<hr>
+					<div class="row">
+						{% for inv in invoices %}
+						<div class='col-12 text-center'>
+							<div class='row mt-1'>
+								<div class='col-6 col-md-3'>
+									<p class="p-p">{{ inv.due_date }}</p>
+								</div>
+								<div class='col-6 col-md-2'>
+									<p class="p-p">{{ inv.status }}</p>
+								</div>
+								<div class='col-6 col-md-3'>
+									<p class="p-p">{{ inv.project_id.client_id }}</p>
+								</div>
+								<div class='col-6 col-md-2'>
+									<p class="p-p">${{ inv.billed|floatformat:2}}</p>
+								</div>
+								<div class='col-12 col-md-2'>
+
+									<button class="btn-icon w-100" 
+									id="detailsBtnInv{{ inv.id }}" 
+									onclick="handleModal('detailsWindowInv{{ inv.id }}', 'detailsBtnInv{{ inv.id }}', 'closeDetailsInv{{ inv.id }}')"
+									>
+										<i class="fa-solid fa-file-invoice-dollar"></i>
+									</button>
+								</div>
+							</div>
+							<hr>
+						</div>
+					{% endfor %}
+				</div>
+				
+				
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- new invoice -->
+{% include "o_panel/modals/invoice/invoice-crerate-modal.html" %}
+
+<!-- invoice with id  -->
+{% for bill in invoice_list %}
+	{% include "o_panel/modals/invoice/invoice-details-modal.html" %}
+	{% include "o_panel/modals/invoice/submodals/invoice-edit-modal.html" %}
+	{% include "o_panel/modals/invoice/submodals/invoice-delete-modal.html" %}
+	{% include "o_panel/modals/invoice/submodals/invoice-cash-modal.html" %}
+	{% include "o_panel/modals/invoice/submodals/invoice-send-modal.html" %}
+{% endfor %}
+
+<script src="{% static 'js/invoice.js' %}"></script>
+<script>
+
+	function initializeModals() {
+		document.addEventListener("DOMContentLoaded", function() {
+			handleModal('detailsWindowInv', 'detailsBtnInv', 'closeDetailsInv');
+			
+		  {% for bill in invoices %}
+			handleModal('detailsWindowInv{{ bill.id }}', 'detailsBtnInv{{ bill.id }}', 'closeDetailsInv{{ bill.id }}');
+
+			{% if bill.status == 'draft' or bill.status == 'open' %}
+			handleModal('detailsWindowInvCash{{ bill.id }}', 'detailsBtnInvCash{{ bill.id }}', 'closeDetailsInvCash{{ bill.id }}');
+			handleModal('detailsWindowInvDel{{ bill.id }}', 'detailsBtnInvDel{{ bill.id }}', 'closeDetailsInvDel{{ bill.id }}');
+			handleModal('detailsWindowInvEdit{{ bill.id }}', 'detailsBtnInvEdit{{ bill.id }}', 'closeDetailsInvEdit{{ bill.id }}');
+			handleModal('detailsWindowInvSend{{ bill.id }}', 'detailsBtnInvSend{{ bill.id }}', 'closeDetailsInvSend{{ bill.id }}');
+			{% endif %}
+		  {% endfor %}
+		});
+	  };
+	initializeModals();
+</script>
+<script src={% static 'js/mini_gallery.js' %}></script>
+{% endblock %}

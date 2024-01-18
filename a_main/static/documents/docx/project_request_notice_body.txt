@@ -1,0 +1,9 @@
+Project Request!!!
+From: [CLIENT_NAME] - ID#:[USER_ID]
+Project Name: [PROJECT_NAME]
+Requested Scope:  [SCOPE]
+Requested date:  [DATE_SELECTED]
+Requested Location type: [LOCATION]
+Details [DETAILS]
+
+

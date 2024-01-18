@@ -1,0 +1,11 @@
+{
+	"folder-path-color.folders": [
+		{ "path": "a_main/logs", "color": "red"},
+		{ "path": "a_main/client", "color": "magenta"},
+		{ "path": "a_main/gallery", "color": "magenta"},
+		{ "path": "a_main/user", "color": "magenta"},
+		{ "path": "a_main/site_app", "color": "cyan"},
+		{ "path": "a_main/django_psdb_engine", "color": "red"},
+	],
+	"git.ignoreLimitWarning": true
+}

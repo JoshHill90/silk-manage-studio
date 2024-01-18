@@ -1,0 +1,95 @@
+
+{% extends 'panel.html' %}
+{% block title %}O | Image Upload{% endblock %}
+{% load static %}
+{% block css %}
+	<link rel='stylesheet' href="{% static 'css/uploadAnimation.css' %}">
+{% endblock %}
+{% block content %}
+
+
+
+
+
+{{object_path}}
+<div class='row mt-4 mb-4' id='uploadsection'>
+	<div class='col-12 h-100'>
+        <form class='form-group' id="uploadForm" method=POST enctype="multipart/form-data">
+            <div class='section-form mt-4'>
+              <h1 class='h1-1'>Upload Image and Prints</h1>
+              <hr>
+                <div class="mb-5" id='onWait'>
+            {% csrf_token %}
+                    <!--   Image upload form  -->
+                    <!--                      -->
+                    <!--                      -->
+                    <input class="form-control mt-4 mb-4" name="files[]" type="file" id="imageUpload" multiple accept="image/*"/>
+                    <!--                      -->
+                    <!--                      -->
+                    <!--                      -->
+                    <h1 class='h1-1'>Upload Procedure and Limitations</h1>
+                    <h1 class='h1-1'>Bulk uploads are limit to 100 at a time.</h1>
+                    <p class='p-p'> All uploaded images are securely stored using Cloudflare's image hosting service.</p>
+                    <p class='p-p'>You are welcome to upload images in the following formats:</p>
+                    <ol>
+                      <p class='p-p'>PNG</p>
+                      <p class='p-p'>GIF</p>
+                      <p class='p-p'>JPEG</p>
+                      <p class='p-p'>SVG</p>
+                    </ol>
+                    <p class='p-p'>Please keep in mind the following size and dimension limitations:</p>
+                    <ol>
+                      <p class='p-p'>The maximum image dimension allowed is 12,000 pixels.</p>
+                      <p class='p-p'>Images are limited to a maximum area of 100 megapixels.</p>
+                      <p class='p-p'>Metadata associated with images cannot exceed 1024 bytes.</p>
+                      <p class='p-p'>Images are subject to a file size limit of 10 megabytes</p>
+                      <p class='p-p'>Animated GIFs, inclusive of all frames, must adhere to a limit of 50 megapixels</p>
+                    </ol>
+                    <p class='p-p'>If an error message shows upload fails please contact the site admin.</p>
+                    <!-- Button -->
+                    <input name='url' value="{% url 'image-token' %}" id='url' hidden>
+                    <input name='imageCreatePage' value="{% url 'image-process' %}" id='imageCreatePage' hidden>
+                    <input name='cf_token' value="{{ cf_token }}" id='cf_token' hidden>
+                    <button class="btn-cust mt-3" id='uploadButton' name='uploadButton' >Upload Image</button>
+                    <section class="dots-container" id='dotsLoader'>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                    </section>
+                    <!-- Button -->
+                  </div>
+            </div>
+        </form>
+        
+	</div>
+</div>
+<div class='row mt-4 mb-4'>
+  <div class='col-12 mt-4 noshow mb-4 float-in text-center' id='uploadAnimation'>
+    <div class="loaderVal mt-4 mb-4" id='validate'>
+      <div class="loaderVal-text"><h1 class='h1-1'>Validating Data...</h1></div>
+      <div class="loaderVal-bar-1 slide-left" id='slide-in'></div>
+    </div>
+
+    <div class="loaderVal mt-4 mb-4" id='backend'>
+      <div class="loaderVal-text"><h1 class='h1-1'>Processing Request...</h1></div>
+      <div class="loaderVal-bar-2 slide-right" id='slide-in'></div>
+    </div>
+
+    <div class='col-12 mt-4 noshow mb-4' id='fileLoader'>
+      <h1 class='h1-1 mt-4 mb-4'>File Upload Progress</h1>
+      <div class='section-specail overflow-auto slide-up mt-4 mb-4' id='slide-in'>
+        <div class='row' id='fileLoaderRow'>
+          
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<script src={% static 'js/uploadImages.js' %}></script>
+{% endblock %}
