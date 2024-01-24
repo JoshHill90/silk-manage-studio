@@ -13,9 +13,9 @@
 <div class='col-12 mt-4 mb-4'>
 	<input id='cf_batch_url' value="{{ batch_url }}" hidden>
 	<input id='deleteURL' value="{% url 'image-token3' %}" hidden>
-	<input id='subgal' value="none" disabled hidden>
+	<input id='gallery' value=None disabled hidden>
 	<input id='lastPage' value="{{ last_page }}" disabled hidden>
-	<input id='pageName' value="gal" disabled hidden>
+
 	<h1 class='h1-1 text-center'>Image Gallery</h1>
 	<hr>
 	<div class='col-12 mt-4 mb-4'>
@@ -159,7 +159,7 @@
 					{% if last_page >= 2 %}
 					<div class="col-12 text-center mb-4">
 						<button class='btn-cust' 
-							value="{% url 'load-gal-endpoint' 0 0 %}"  
+							value="{% url 'load-gal-endpoint' 'None' %}"  
 							type='button' 
 							name='loadMore' 
 							id='loadMore'

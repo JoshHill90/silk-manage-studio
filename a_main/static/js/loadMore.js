@@ -6,10 +6,9 @@ const url = document.getElementById('loadMore').value;
 console.log(url)
 const loadBtn = document.getElementById('loadMore');
 const loaderBar = document.getElementById('dotsLoader');
-const subgal = document.getElementById('subgal').value;
+const gallery = document.getElementById('gallery').value;
 const lastPage = document.getElementById('lastPage').value;
-const pageName = document.getElementById('pageName').value;
-console.log(subgal, lastPage)
+
 
 document.getElementById("loadMore").addEventListener("click", function(event){
 	event.preventDefault();
@@ -31,27 +30,26 @@ document.getElementById("loadMore").addEventListener("click", function(event){
 			'X-CSRFToken': csrftoken
 		}
 
-		})
-		.then(res => res.json())
-		.then(responseData => {
-			console.log(nextPage, lastPage)
-			if (nextPage == lastPage){
-				loaderBar.style.display = 'none';
-			} else {
-				loaderBar.style.display = 'none';
-				loadBtn.style.display = 'inline-block';
-			};
-			if (pageName == 'gal'){
-				galleryDivs(responseData);
-			};
-
+	})
+	.then(res => res.json())
+	.then(responseData => {
+		console.log(nextPage, lastPage)
+		if (nextPage == lastPage){
+			loaderBar.style.display = 'none';
+		} else {
+			loaderBar.style.display = 'none';
+			loadBtn.style.display = 'inline-block';
+		};
+		
+		galleryDivs(responseData);
 	}).catch(error => console.error('Error:', error));
 });
 
 function galleryDivs(gallerryData){
-	for(let data_set of gallerryData){
+	const current_gal =  gallerryData.displaySet; 
+	for(let data_set of gallerryData.imgObj){
 
-		let itemDisplay =data_set.display;
+		
 		let itemId = data_set.id;
 		let itemTitle = data_set.title;
 		let itemImage = data_set.image_link;
@@ -65,7 +63,10 @@ function galleryDivs(gallerryData){
 
 		// creates the image card
 		const imageCardDi = document.createElement('div');
-		if (itemDisplay == subgal){
+		
+		const inDisplay = current_gal.includes(parseInt(itemId));
+		console.log(inDisplay)
+		if (inDisplay) {
 			imageCardDi.className = 'image-card-a';
 		} else {
 			imageCardDi.className = 'image-card';

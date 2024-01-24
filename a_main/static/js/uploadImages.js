@@ -6,7 +6,7 @@
 const uploadButton = document.getElementById("uploadButton");
 const loaderBar = document.getElementById('dotsLoader');
 const imageUpload = document.getElementById("imageUpload");
-const imageCreatePage = document.getElementById('imageCreatePage').value;
+
 const url = document.getElementById('url').value;
 const uploadDiv = document.getElementById('uploadsection');
 const uploadAnimationDiv = document.getElementById('uploadAnimation');
@@ -42,15 +42,16 @@ uploadButton.addEventListener("click", uploadFiles);
 //-------------------------------//-------------------------------//-------------------------------//
 
 async function uploadFiles(event) {
+
     event.preventDefault();
     const csrftoken = getCookie('csrftoken');
-    const fileLimit = 100;
-    const imageFiles = imageUpload.files;
-
+    const fileLimit = 100; // max items
+    const imageFiles = imageUpload.files; //images
+    // removes the current divs showing the upload form
 	uploadDiv.classList.add('noshow')
+    // starts animation for validation
     uploadAnimationDiv.classList.remove('noshow');
     uploadButton.style.display = 'none';
-    loaderBar.style.display = 'flex';
     loadValid.style.display = 'flex';
 
     if (imageFiles.length === 0) {
@@ -58,7 +59,7 @@ async function uploadFiles(event) {
         displayError("Please select at least one image file of a valid format to upload.");
         return;
     }
-
+        // validation 
     if (imageFiles.length > fileLimit) {
         displayError(`Please select up to ${fileLimit} files.`);
         return;
@@ -78,6 +79,8 @@ async function uploadFiles(event) {
             return;
         }
     }
+    // loadbar for backend call
+    loaderBar.style.display = 'flex';
     // cf_data was used as a way to id the POST request on the backend
     LoadBackend.style.display = 'flex';
 
@@ -101,9 +104,10 @@ async function uploadFiles(event) {
         loadValid.style.display = 'none';
         LoadBackend.style.display = 'none';
         // Using destructuring to get the result from uploadImages function
-        const { backEndData, redirectUrl } = await uploadImages(responseData, imageFiles, imageCreatePage);
-        // since the initital redirect was stopped this will process the last leg  of the function, and send the cf ids back for encoding
-        delayedRedirect(backEndData, redirectUrl);
+        const {backEndData} = await uploadImages(responseData, imageFiles);
+        // redicrects to the next page and send the cf ids back for encoding
+        delayedRedirect(backEndData);
+
     } catch (error) {
         console.error('Error:', error);
         alert('An error occurred while processing the request, please refresh and try again. If the issue persists, please contact the site admin.');
@@ -114,7 +118,7 @@ async function uploadFiles(event) {
 
 
 // Function to upload images to the backend
-async function uploadImages(responseData, imageFiles, pageURL) {
+async function uploadImages(responseData, imageFiles) {
     const backEndData = [];
     
     fileLoader.classList.remove('noshow');
@@ -140,7 +144,7 @@ async function uploadImages(responseData, imageFiles, pageURL) {
         divCol.appendChild(nameLoader);
 
         imgMultiPart.append("file", imageFiles[fileCounter]);
-        var metadata = { "silk_id": "CB01" };
+        var metadata = { "silk_id": "STJH" };
         imgMultiPart.append('metadata', JSON.stringify(metadata));
         //-------------------------------//
         // for loop image direct upload 
@@ -163,7 +167,7 @@ async function uploadImages(responseData, imageFiles, pageURL) {
                 
             }
 
-            // If the response is OK, continue with your logic
+            // If the response is OK, show image bar uploaded
             const cf_resp = await response.json(); 
             console.log(cf_resp.result.id);
             progLoader.classList.remove('loaderFile');
@@ -178,19 +182,19 @@ async function uploadImages(responseData, imageFiles, pageURL) {
             
         }
     }
-
-    return { 'backEndData': backEndData, 'redirectUrl': pageURL };
+    // after the files are uploaded the list of cf ids are returned 
+    return { 'backEndData': backEndData};
 }
 
 
 // Function to handle delayed redirect
-function delayedRedirect(backEndData, redirectUrl) {
+function delayedRedirect(backEndData) {
     const csrfGet = getCookie('csrftoken');
     const data = { 'data': backEndData};
     //-------------------------------//
     // redirect request with cf IDs 
     //-------------------------------//
-    fetch(redirectUrl, {
+    fetch(url, {
         method: 'POST',
         body: JSON.stringify(data),
         credentials: 'same-origin',

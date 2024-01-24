@@ -24,37 +24,22 @@ async function clear() {
 	if (!response.ok) {
 		alert('refesh and retry, if the issue persist pelase contact the admin');
 	} else {
-		const imageList = await response.json();
-		imageClear(imageList.imgList, csrftoken);
+		
+		imageClear();
 	};
 
 };
 
-async function imageClear(imageListSet, csrftoken){
-	for (i = 0; i < imageListSet.length; ++i) {
-		var checkedImg = document.getElementById('id_check'+imageListSet[i]);
-		if (checkedImg) {
-			let imgDiv = checkedImg.parentNode;
+async function imageClear(){
+	var checkedImg = document.querySelectorAll('.checkImage');;
+	for (i = 0; i < checkedImg.length; ++i) {
+		
+		if (checkedImg[i].checked == true) {
+			let imgDiv = checkedImg[i].parentNode;
 			imgDiv.checked = false;
 			imgDiv.classList.remove("image-card-a");
 			imgDiv.classList.add("image-card");
 		}
-
-		const response = await fetch(changeUrl, {
-			
-			method: "POST",
-			credentials: "same-origin", 
-			body: JSON.stringify({ 'id': imageListSet[i] }),
-			headers: {
-				'Content-Type': 'application/json',
-				'X-CSRFToken': csrftoken
-			}
-			
-		});
-
-		if (!response.ok) {
-			alert('refesh and retry, if the issue persist pelase contact the admin');
-		} 
 
 	};
 }

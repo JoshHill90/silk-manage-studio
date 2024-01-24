@@ -8,6 +8,7 @@ import os
 from dotenv import load_dotenv
 from django.shortcuts import redirect
 import time
+from django.db.models import Q
 
 current_dir = Path(__file__).resolve().parent
 ven = current_dir / "../.env"
@@ -458,7 +459,7 @@ class ViewQueryHelper:
 		print(current_gal)
 		# Apply filters
 		if current_gal == 'True':
-			image_object = image_object.display_set.filter(display=gal)
+			image_object = image_object.filter(id__in=gal)
 
 		if project_query :
 			image_object = image_object.filter(project_id__name__icontains=project_query)

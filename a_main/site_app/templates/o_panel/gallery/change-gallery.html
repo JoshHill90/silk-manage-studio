@@ -1,38 +1,61 @@
 
 {% extends 'panel.html' %}
 {% load static %}
-{% block title %}O | {{ gal }} Gallery{% endblock %}
+{% block title %}O | {{ display.name }} Gallery{% endblock %}
 {% block css %}
 	<link rel='stylesheet' href="{% static 'css/imageCard.css' %}">
 {% endblock %}
 {% block content %}
 
-<input id='subgal' value="{{ subgal}}" disabled hidden>
+<input id='gallery' value="{{ display.id}}" disabled hidden>
 <input id='lastPage' {% if last_page %} value="{{ last_page }}" {% else %} value='1' {% endif %} disabled hidden>
-<input id='pageName' value="gal" disabled hidden>
-<input id='clearGalURL' type="text" value="{% url 'gal-clear-endpoint' gal  subgal %}" hidden>
+
+<input id='clearGalURL' type="text" value="{% url 'gal-clear-endpoint' gal %}" hidden>
 <div class='row'>
-	<div class='col-12 mt-4 mb-4'>
-		<h1 class='h1-1'>{{ gal_name.name| title}}  Gallery</h1>
-		<hr>
+	<div class='col-12 col-md-6 mt-4 mb-2'>
+		<h1 class='h1-1'>{{ display.name| title}}  Gallery</h1>
+		
 	</div>
+	
+	<div class='col-12 col-md-6  mt-4'>
+		<div class='row'>
+			<div class='col-6 col-md-4'>
+				<button  class='btn-icon w-100' id="detailsBtnCal" onclick="">
+					<i class="fa-solid fa-sliders fa-2xl"></i>
+					
+				</button>
+			</div>
+
+			<div class='col-6 col-md-4'>
+				<button  class='btn-icon w-100' id="detailsBtnCal" onclick="">
+					<i class="fa-solid fa-share-from-square fa-2xl"></i>
+					
+				</button>
+			</div>
+			<div class='col-6 col-md-4'>
+				<button  class='btn-icon w-100' id="detailsBtnCal" onclick="">
+					<i class="fa-solid fa-trash-can fa-2xl"></i>.
+					
+				</button>
+			</div>
+		</div>
+	</div>
+	<hr>
 	{% if current_list %}
 	<div class='col-12 col-md-6'>
 		
 		<div class='section-min'>
-
-
 			
+
 			{% for image in current_list %}
 			
 			<div class="mini-Slides text-center">
-				{% if subgal == '4' or subgal == '6' or subgal == '8' %}
-				<form method=POST action="{% url 'change-gal' gal subgal %}" >
+				
+				<form method=POST action="{% url 'change-gal' display.slug %}" >
 					{% csrf_token %}
 					<input value='{{ image.id }}' namd='{{ image.id }}' id='header_id' hidden>
 					<button class="btn-cust" name='header' value='{{ image.id }}'>Make Header</button>
 				</form>
-				{% endif %}
 				<div class='section-holder'>
 					<p class="p-p">Image name{{ image.title}}</p>
 					<img class='image-frame' src="{{ image.image_link }}">
@@ -55,10 +78,22 @@
 	<div class='col-12 col-md-6'>
 		<div class='overflow-auto '>
 			<div class="row section-scroll-2">
+				{% if display.header_image %}
+				<div class="slide-up text-center col-12" id='slide-in'>
+					<p class='nums'>Header Image</p>
+					<img load='lazy'
+					class="demo mt-4 mb-4 cursor-mini  helight-shadow }" 
+					src="{{ display.header_image.image_link }}"
+					style="height:20vh" 
+					onclick="currentSlide({{ forloop.counter }})" 
+					alt="Image ID: {{display.header_image.id}}"
+					>
+				</div>
+				{% endif %}
 				{% for image in current_list %}
 				<div class="slide-up text-center col" id='slide-in'>
 						<img load='lazy'
-						class="demo mt-4 mb-4 cursor-mini {% if gal in image.display %} helight-shadow {% endif %}" 
+						class="demo mt-4 mb-4 cursor-mini" 
 						src="{{ image.image_link }}"
 						style="height:20vh" 
 						onclick="currentSlide({{ forloop.counter }})" 
@@ -126,12 +161,12 @@
 					</div>
 
 					<div class="col-12 col-md-3 mt-4">
-						<button type="submit" onclick="{% url 'change-gal' gal subgal %}" class="btn-cust btn-cust-color mt-4">Clear Search</button>
+						<button type="submit" onclick="{% url 'change-gal' gal %}" class="btn-cust btn-cust-color mt-4">Clear Search</button>
 					</div>
 				</div>
 			</form>
 
-			<form method=POST action="{% url 'change-gal' gal subgal %}" class='mt-4 section-med form-group'>
+			<form method=POST action="{% url 'change-gal' gal %}" class='mt-4 section-med form-group'>
 				{% csrf_token %}
 				<div class="row" >
 					<div class='col-12'>
@@ -231,18 +266,21 @@
 
 				</div>
 				<div class='row scroll-row'>
-					{% if last_page >= 2 %}
+					
 					<div class="col-12 text-center mb-4">
 						<button class='btn-cust' 
-							value="{% url 'load-gal-endpoint' gal subgal %}" 
+							value="{% url 'load-gal-endpoint' gal %}" 
 							type='button' 
 							name='loadMore' 
 							id='loadMore'
 							style='display:inline-block'
+							{% if last_page < 2 %}
+								hiddend
+							{% endif %}
 							>
 							Load More
 						</button>
-					{% endif %}
+					
 						<section class="dots-container" id='dotsLoader'>
 							<div class="dot"></div>
 							<div class="dot"></div>

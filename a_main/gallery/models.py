@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-
+from autoslug import AutoSlugField
 
 
 class Tag(models.Model):
@@ -28,7 +28,10 @@ class Image(models.Model):
 
 class Dispaly(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    images = models.ManyToManyField(Image, blank=True, null=True)
+    images = models.ManyToManyField(Image, blank=True, null=True, related_name='display_images')
+    slug = AutoSlugField(populate_from='name')
     header_image = models.ForeignKey(Image,  null=True, blank=True, on_delete=models.SET_NULL, related_name='header_images')
     def __str__(self):
         return str(self.name)
+    def get_absolute_url(self):
+        return reverse("change-gal", kwargs={"slug": self.slug})

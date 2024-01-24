@@ -174,7 +174,8 @@ def marketing(request):
 	return render(request, 'o_panel/marketing.html')
 
 def o_gallery(request):
-	return render(request, 'o_panel/gallery.html')
+	display = Dispaly.objects.all()
+	return render(request, 'o_panel/gallery.html', {'display': display})
 
 
 def document_settings(request):

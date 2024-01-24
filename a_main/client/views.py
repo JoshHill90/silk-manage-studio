@@ -38,7 +38,7 @@ docf = DocumentFunctions()
 
 
 def o_client(request):
-    
+	
 	client_list = Client.objects.exclude(Q(name='Soft Subversion'))
 	client_images = Image.objects.exclude(Q(client_id__name="Soft Subversion"))
 	project_list = Project.objects.exclude(Q(name="Soft Subversion"))
@@ -284,7 +284,7 @@ def project_details(request, slug):
 					line_items_cost,
 					line_items_receipt,
 					line_item_model,
-     				event_model
+	 				event_model
 				)
 
 				if operation == 'success':
@@ -419,8 +419,15 @@ def project_request_details(request, slug):
 		client = User.objects.get(id=project_request.client_id.user_id.id)
 		if comment_form.is_valid():
 			user_info = request.user
+			print(str(user_info))
+			
 			new_comment = comment_form.save(commit=False)
-			new_comment.user_id = user_info
+			if user_info.is_authenticated:
+				new_comment.user_id = user_info
+			else:
+				owner_sub = User.objects.get(id=1)
+				new_comment.user_id = owner_sub
+    
 			new_comment.project_request_id = project_request
 			new_comment.save()
 			comment = comment_form.cleaned_data.get('comment')

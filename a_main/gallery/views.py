@@ -38,17 +38,16 @@ def append_cloundflare_id(cf_id, image_id):
 # gallery views site, project and client
 #-------------------------------------------------------------------------------------------------------#
 
-def manage_gallery(request, gal):
+def manage_gallery(request, slug):
 	# The gallery management section empowers users to curate the content for various galleries, 
 	# including the home page and header images for each gallery. 
 	
 	try:
 		all_images = Image.objects.all().distinct()
-		display = Dispaly.objects.filter(gal)
-		
-		#subgal_instance = display.get(id=subgal)
-		#gall_instance = display.get(id=gal)
-		current_gallery = display.image_set.all()
+		display = Dispaly.objects.get(slug=slug)
+		current_images = display.images.all()
+
+		print()
 		
 		filter_set = vqh.image_query(request, all_images, display)
 		
@@ -56,14 +55,13 @@ def manage_gallery(request, gal):
 		last_page = image_p.num_pages
 		page = request.GET.get('page')
 		image_sets = image_p.get_page(page)
-	
+
 		# Post request section for functions called on the front
 		if request.method == 'POST':
 			
 			# request to update the images of the current gallery
 			# the images will only add images that are selected
 			if 'update' in request.POST.values():
-				#print('update')
 				# creats blank image list and sets all images in the galllery to none
 				image_listed = set()
 				# creates keypair values for selected images
@@ -73,10 +71,10 @@ def manage_gallery(request, gal):
 				# filter and update selected values
 				
 				selected_images = all_images.filter(id__in=image_listed)
-				display.update(image=None)
+				display.images.add(*selected_images)
 				
 
-				return redirect('change-gal', display)
+				return redirect('change-gal', display.slug)
 
 			# remove function: will only remove items selected
 			elif 'remove' in request.POST.values():
@@ -90,32 +88,27 @@ def manage_gallery(request, gal):
 		
 				# filter for selected values
 				selected_images = all_images.filter(id__in=image_listed)
-				
-				for image in selected_images:
-					image.display.remove(subgal_instance)
+				for image_index in range(len(selected_images)):
+					display.images.remove(selected_images[image_index])
 
-				return redirect('change-gal', display)
+				return redirect('change-gal', display.slug)
 			
 			# make image header for the gallery
 			elif 'header' in request.POST.keys():
 
 				header_image_id = request.POST.get('header')
-				#print(header_image_id)
-				header_image = all_images.filter(id=header_image_id)
-				current_header = gall_instance.image_set.filter(display=gal)
-				for image in current_header:
-					image.display.remove(gal)
-		
-				header_image.get().display.add(gall_instance)
-				return redirect('change-gal', gal=gal, subgal=subgal)
+				print(header_image_id)
+				header_image = all_images.get(id=header_image_id)
+				display.header_image = header_image
+				display.save()
+
+				return redirect('change-gal', display.slug)
 
 		return render(request, 'o_panel/gallery/change-gallery.html', {
-			'current_list': get_gallery,
-			'gal': gal,
-			'subgal':subgal,
+			'current_list': current_images,
+			'gal': slug,
+			'display': display,
 			'image_sets':image_sets,
-			'gal_name':gall_instance,
-			'subgal_name':subgal_instance,
 			'last_page':last_page
 		})
   
@@ -142,13 +135,22 @@ def all_image_list(request):
 	return render(request, template_name, {'image_sets':image_sets, 'last_page': last_page})
 
 # endpoint for clearing selected gallery images
-def load_more_enpoint(request, gal, subgal):
-	print('load')
+def load_more_enpoint(request, slug):
+	print('load more ', slug)
+	image_in_display = []
 	
-	all_images = Image.objects.all().distinct().only('id', 'project_id', 'title', 'display', 'image_link')
-	filter_set = vqh.image_query(request, all_images, subgal)
-	display = Dispaly.objects.all()
-	subgal_instance = None
+	all_images = Image.objects.all().distinct().only('id', 'project_id', 'title', 'image_link')
+	if slug == 'None':
+		display_object = Dispaly.objects.all()
+		image_in_display = []
+
+	else:
+		display_object = Dispaly.objects.get(slug=slug)
+		for img_id in display_object.images.all():
+			image_in_display.append(img_id.id)
+			print(img_id)
+
+	filter_set = vqh.image_query(request, all_images, display_object)
 
 	# Pagenate date and get the next page set
 	image_p = Paginator(filter_set.all(), 21)
@@ -163,54 +165,28 @@ def load_more_enpoint(request, gal, subgal):
 		image_project = str(get_info.project_id.name)
 		image_title = str(get_info.title)
 		image_link = str(get_info.image_link)
-		display_list = get_info.display.values()
 
-		image_display = str(0)
-		if display_list and subgal != '0':
-     
-			subgal_instance = display.get(id=subgal)
-   
-			for display_id in display_list:
-
-				if display_id['id'] == subgal_instance.id:
-					image_display = subgal
-     
 		next_image_set.append({
 			'id':image_id,
 			'project':image_project, 
 			'title':image_title, 
-			'display':image_display,
 			'image_link':image_link
 			})
   
-	return HttpResponse(json.dumps(next_image_set))
+	return HttpResponse(json.dumps({"imgObj": next_image_set, 'displaySet': image_in_display}))
 
 # endpoint for clearing selected gallery images
-def clear_gallery_endpoint(request, gal, subgal):
-	display_object = Dispaly.objects.all()
-	subgal_instance = display_object.get(id=subgal)
+def clear_gallery_endpoint(request, slug):
+	display_object = Dispaly.objects.get(slug=slug)
 	
 	if request.method == 'GET':
-		img_list = []
-		gal_images = Image.objects.filter(display=subgal_instance).distinct().only('id', 'display')
-		for index in range(len(gal_images)):
-			img_list.append(str(gal_images[index].id))
+		display_object.header_image = None
+		display_object.images.clear()
+		display_object.save()
 
-		reps = json.dumps({'imgList': img_list})
+		reps = json.dumps({'sucess': 'sucess'})
 		return HttpResponse(reps)
-			
-	if request.method == 'POST':
-		body_unicode = request.body.decode('utf-8')
-		body = json.loads(body_unicode)
-		img_id = body.get('id')
-		
-		gal_instance = display_object.get(id=gal)
-		gal_image = Image.objects.get(id=img_id)
-		gal_image.display.remove(subgal_instance)
-		gal_image.display.remove(gal_instance)
-		resp = json.dumps({'success':'success'})
-		
-		return HttpResponse(resp)
+
 	
 def image_upload(request):
 	
@@ -219,21 +195,7 @@ def image_upload(request):
 # Image upload views
 #-------------------------------------------------------------------------------------------------------#
 
-def image_process(request):
-	data_packet = []
-	cfId_slug = ''
-	if request.method == 'POST':
-		for cf_object in json.load(request)['data'] :
-			
-			slug_id =' ' + str(cf_object)
-			cfId_slug = cfId_slug + slug_id
-		compressed_data = zlib.compress(cfId_slug.encode())
-		data_packet = compressed_data.hex()
-		
-		image_form_url = reverse('image-form', args=[data_packet])
-		return JsonResponse(str(image_form_url), safe=False)
 
-	return JsonResponse({'error': 'Invalid request method'})
 
 def image_form(request, data_packet):
 	
@@ -259,7 +221,20 @@ def image_form(request, data_packet):
 #-------------------------------------------------------------------------------------------------------#
 
 def upload_token_endpoint(request):
-	if request.method == 'GET':
+	data_packet = []
+	cfId_slug = ''
+	if request.method == 'POST':
+		for cf_object in json.load(request)['data'] :
+			
+			slug_id =' ' + str(cf_object)
+			cfId_slug = cfId_slug + slug_id
+		compressed_data = zlib.compress(cfId_slug.encode())
+		data_packet = compressed_data.hex()
+		
+		image_form_url = reverse('image-form', args=[data_packet])
+		return HttpResponse(json.dumps(image_form_url))
+	
+	elif request.method == 'GET':
 		post_data = []
 		cloudflare_token = cf_api_call.get_batch_token()
 		if 'error' not in cloudflare_token:
@@ -275,8 +250,9 @@ def upload_token_endpoint(request):
 			return redirect('issue-backend', status=500, error_message=slugified_error_message)
 	
 		return JsonResponse(post_data, safe=False)
-
-				
+	else:
+		return JsonResponse({'error': 'Invalid request method'})
+	
 def delete_image_endpoint(request):
 	cf_id_chain = []
 	print('check-0')
@@ -290,7 +266,7 @@ def delete_image_endpoint(request):
 			cf_id_chain.append(cf_id.cloudflare_id)
 		deletedImages.delete()
 		data = {
-      		'cf_id_chain':datalist,
+	  		'cf_id_chain':datalist,
 		}
   
 		post_data = json.dumps(data)
@@ -302,14 +278,9 @@ def delete_image_endpoint(request):
 		logging.error("Client Invite Error: %s", str((e)))
 		slugified_error_message = slugify(str(e))
 		return redirect('issue-backend', status=500, error_message=slugified_error_message)
-	
-	
-		
 
- 
 def create_image_endpoint(request):
 	tags_object = Tag.objects.all()
-	display_object = Dispaly.objects.all()
 
 	formData = json.load(request)
 	datalist = formData.get('data')
@@ -329,7 +300,7 @@ def create_image_endpoint(request):
 		print('upload')
 		image_url = f'https://imagedelivery.net/4_y5kVkw2ENjgzV454LjcQ/{cf_id}/display'
 		imgobj = Image(
-			title=str(set_title) + '-' + str(cf_id),
+			title=str(set_title) + ' -' + str(cf_id[(len(cf_id) - 5): -1]),
 			client_id=slected_client,
 			project_id=project_instance,
 			image_link=image_url,
@@ -349,11 +320,12 @@ def create_image_endpoint(request):
 			else:
 				tag_instance = tags_object.create(name=tags)
 				tag_instance.save()
-    
+	
 			images.tag.add(tag_instance.id)
+   
+	display_object =  Dispaly.objects.all()
+	for display in set_display:
+		display_instance =  display_object.get(id=display)
+		display_instance.images.set(image_list)
 
-		for display in set_display:
-			display_instance = display_object.get(id=display)
-			images.display.add(display_instance.id)
-
-	return JsonResponse('success', safe=False)
+	return HttpResponse({'success':'success'})
