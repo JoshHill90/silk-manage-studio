@@ -17,4 +17,8 @@ urlpatterns = [
     
     path('api/v1/gallery/clear-gal/<slug:slug>/', views.clear_gallery_endpoint, name='gal-clear-endpoint'),
     path('api/v1/gallery/load-gal/<slug:slug>/', views.load_more_enpoint, name='load-gal-endpoint'),
+    path('api/v1/create/', views.create_display_endpoint, name='create-display-endpoint'),
+    path('api/v1/<slug:slug>/settings/', views.display_settings_endpoint, name='settings-display-endpoint'),
+    path('api/v1/<slug:slug>/delete/', views.display_delete_endpoint, name='delete-display-endpoint'),
+    path('api/v1/<slug:slug>/share/', views.display_share_endpoint, name='share-display-endpoint'),
 ]

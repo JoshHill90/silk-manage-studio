@@ -3,7 +3,7 @@
 const loaderRow = document.getElementById('loaderRow');
 let nextPage = 1;
 const url = document.getElementById('loadMore').value;
-console.log(url)
+//console.log(url)
 const loadBtn = document.getElementById('loadMore');
 const loaderBar = document.getElementById('dotsLoader');
 const gallery = document.getElementById('gallery').value;
@@ -33,7 +33,7 @@ document.getElementById("loadMore").addEventListener("click", function(event){
 	})
 	.then(res => res.json())
 	.then(responseData => {
-		console.log(nextPage, lastPage)
+		//console.log(nextPage, lastPage)
 		if (nextPage == lastPage){
 			loaderBar.style.display = 'none';
 		} else {

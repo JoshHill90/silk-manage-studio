@@ -15,9 +15,9 @@
 	<link rel='stylesheet' href="{% static 'css/panel_scroll.css' %}">
 	<link rel='stylesheet' href="{% static 'css/panel_sections.css' %}">
 	<link rel='stylesheet' href="{% static 'css/panel_modal.css' %}">
-	<link rel='stylesheet' href="{% static 'css/calendar.css' %}">
 	<link rel='stylesheet' href="{% static 'css/window_load.css' %}">
 	<link rel='stylesheet' href="{% static 'css/animation.css' %}">
+	<link rel='stylesheet' href="{% static 'css/btns.css' %}">
 	<link rel='stylesheet' href="{% static 'css/mini-gallery.css' %}">
 	{% block css %}
 	
@@ -37,8 +37,8 @@
     <div class="header_toggle">
         <i class="fa-solid fa-ellipsis fa-2xl menu-icon"></i>
     </div>
-	<a href="{% url 'logout' %}" class="btn-icon addLoader"> 
-	 	<i class="fa-solid fa-right-from-bracket fa-2xl"></i>
+	<a href="{% url 'logout' %}" class="tooltip-obj btn-icon addLoader"> 
+		<span class='tooltiptext'>Logout</span><i class="fa-solid fa-right-from-bracket fa-2xl"></i>
 	</a>
 </header>
 <div class="l-navbar" id="nav-bar">
@@ -56,11 +56,11 @@
 				</a> 
 				<a href="{% url 'image-upload' %}" class="nav_link addLoader"> 
 					<i class="fa-solid fa-photo-film fa-xl"></i>
-					<span class="nav_name">Images</span>
+					<span class="nav_name">Images Upload</span>
 				</a> 
 				<a href="{% url 'o-gallery' %}" class="nav_link addLoader"> 
 					<i class="fa-solid fa-camera-retro fa-xl"></i>
-					<span class="nav_name">Gallery</span> 
+					<span class="nav_name">Galleries</span> 
 				</a> 
 			</div>
 		</div> 

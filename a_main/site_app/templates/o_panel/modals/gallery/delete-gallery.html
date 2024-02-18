@@ -1,0 +1,26 @@
+
+
+<div id="DeleteGalModal" class="details-modal">
+
+	<input id='settingsDisplayURL' value="{% url 'delete-display-endpoint' display.slug %}" hidden>
+
+	<div class="details-content overflow-auto">
+		<span class="closeDetails" id="closeDeleteGal"><i class="fa-solid fa-circle-xmark fa-lg icon-color"></i></span>
+		<h1 class='h1-1'>Delete Gallery</h1>
+		<p class='p-p'>This will only delete the gallery, not the images associated with it.</p>
+		<hr>
+		<div class='row'>
+
+			<div class='col-12 mt-4 mb-4 col-md-4'>
+				<form method="post" id='deleteDisplayForm'>
+					{% csrf_token %}
+					
+					<button class='btn-cust'>
+						Delete Gallery
+					</button>
+				</form>
+			</div>
+
+		</div>		
+	</div>
+</div>

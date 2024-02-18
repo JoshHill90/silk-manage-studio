@@ -20,21 +20,21 @@
 	<div class='col-12 col-md-6  mt-4'>
 		<div class='row'>
 			<div class='col-6 col-md-4'>
-				<button  class='tooltip-obj btn-icon w-100' id="SettingsGalBtn" onclick="handleModal('SettingsGalModal', 'SettingsGalBtn', 'closeSettingsGal');" >
-					<span class='tooltiptext'>Change Gallery Settings</span><i class="fa-solid fa-sliders fa-2xl"></i>
+				<button  class='btn-icon w-100' id="detailsBtnCal" onclick="" disabled>
+					<i class="fa-solid fa-sliders fa-2xl"></i>
 					
 				</button>
 			</div>
 
 			<div class='col-6 col-md-4'>
-				<button  class='tooltip-obj btn-icon w-100' id="ShareGalBtn" onclick="handleModal('ShareGalModal', 'ShareGalBtn', 'closeShareGal');" >
-					<span class='tooltiptext'>Share Gallery</span><i class="fa-solid fa-share-from-square fa-2xl"></i>
+				<button  class='btn-icon w-100' id="detailsBtnCal" onclick="" disabled>
+					<i class="fa-solid fa-share-from-square fa-2xl"></i>
 					
 				</button>
 			</div>
 			<div class='col-6 col-md-4'>
-				<button  class='tooltip-obj btn-icon w-100' id="DeleteGalBtn" onclick="handleModal('DeleteGalModal', 'DeleteGalBtn', 'closeDeleteGal')" >
-					<span class='tooltiptext'>Delete Gallery</span><i class="fa-solid fa-trash-can fa-2xl"></i>.
+				<button  class='btn-icon w-100' id="detailsBtnCal" onclick="" disabled>
+					<i class="fa-solid fa-trash-can fa-2xl"></i>.
 					
 				</button>
 			</div>
@@ -43,39 +43,9 @@
 	<hr>
 	{% if current_list %}
 	<div class='col-12 col-md-6'>
-		<div class='overflow-auto section-scroll-2'>
-			<div class="row row-scroll">
-				<div class='col-10 col-md-8'>
-					<p class='p-b'> Title</h1>
-				</div>
-				<div class='col-2 col-md-4'>
-					<p class='p-b'> Header</h1>
-				</div>
-
-				{% for image in current_list %}
-
-				<div class="text-mini col-10 col-md-8">
-					<p class='p-l demo' onclick="currentSlide({{ forloop.counter }})">
-						{{image.title|title}} 
-					</p>
-				</div>
-				<div class='col-2 col-md-4'>
-										
-					{% if display.header_image == image %}
-					<i class="fa-solid text-center text-header-note fa-star"></i>
-					{% endif %}
-				
-				</div>
-				<hr>
-				{% endfor %}
-			</div>
-		</div>
-
-	</div>
-	<div class='col-12 col-md-6'>
 		
 		<div class='section-min'>
-			  
+			
 
 			{% for image in current_list %}
 			
@@ -105,7 +75,36 @@
 
 		</div>
 	</div>
+	<div class='col-12 col-md-6'>
+		<div class='overflow-auto '>
+			<div class="row section-scroll-2">
+				{% if display.header_image %}
+				<div class="slide-up text-center col-12" id='slide-in'>
+					<p class='nums'>Header Image</p>
+					<img load='lazy'
+					class="demo mt-4 mb-4 cursor-mini  helight-shadow }" 
+					src="{{ display.header_image.image_link }}"
+					style="height:20vh" 
+					onclick="currentSlide({{ forloop.counter }})" 
+					alt="Image ID: {{display.header_image.id}}"
+					>
+				</div>
+				{% endif %}
+				{% for image in current_list %}
+				<div class="slide-up text-center col" id='slide-in'>
+						<img load='lazy'
+						class="demo mt-4 mb-4 cursor-mini" 
+						src="{{ image.image_link }}"
+						style="height:20vh" 
+						onclick="currentSlide({{ forloop.counter }})" 
+						alt="Image ID: {{image.id}}"
+						>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
 
+	</div>
 	{% else %}
 	<div class='col-12'>
 		<div class='cardSlide mt-4 mb-4'>
@@ -210,7 +209,7 @@
 					
 				<div class="row text-center" id='loaderRow'>
 					{%for image in image_sets %}
-					<div class="col mt-4 mb-4 slide-up">
+					<div class="col mt-4 mb-4 slide-up" id='slide-in'>
 						{% if image in current_list %}
 						<div class="image-card-a">
 							<input 
@@ -235,16 +234,31 @@
 								load='lazy' 
 								src="{{ image.image_link }}" 
 								>
-							</label >
-							<div hidden id='img-title{{image.id}}' value="{{image.title}}"></div>
-							<div hidden id='img-image_link{{image.id}}' value="{{image.image_link}}"></div>
-							<div hidden id='img-project_id{{image.id}}' value="{{image.project_id}}"></div>
-							<div hidden id='img-first_name{{image.id}}' value="{{image.project_id.client_id.user_id.first_name}}"></div>
-							<div hidden id='img-last_name{{image.id}}' value="{{image.project_id.client_id.user_id.last_name}}"></div>
-
-							<div class='img-tags' value="{{image.tags}}"></div>
 							
-							<button class='btn-icon-img' onclick="modalImageInfo(event, '{{image.id}}')"> <i class="fa-regular fa-window-restore"></i></button>
+								<div class="row title">
+
+
+									<div class='col-6'>
+										<p class='p-p'>
+											ID: #{{ image.id }}
+										</p>
+									</div>
+									
+									<div class='col-12'>
+										<p class='p-p'>
+											Project: {{ image.project_id|title}}
+										</p>
+									</div>
+
+									<div class='col-12'>
+										<p class='p-p'>
+											Title: {{ image.title|title }} 
+										</p>
+									</div>
+	
+		
+								</div>
+							</label >
 						</div>
 						
 					</div>
@@ -283,43 +297,14 @@
 		</div>
 		
 	</div>
-	{%for image in image_sets %}
-	<button id='ImageGalBtn{{image.id}}' hidden></button>
-	{% endfor %}
+
 
 </div>
-<!-- Create Galleryt -->
-{% include "o_panel/modals/gallery/share-gallery.html" %}
-{% include "o_panel/modals/gallery/image-info.html" %}
-{% include "o_panel/modals/gallery/delete-gallery.html" %}
-{% include "o_panel/modals/gallery/settings-gallery.html" %}
 
-<script>
-	initializeModals();
-	function initializeModals() {
-		
-		document.addEventListener("DOMContentLoaded", function() {
-			
-			//handleModal('ImageGalModal', 'ImageGalBtn', 'closeImageGal');
-			handleModal('DeleteGalModal', 'DeleteGalBtn', 'closeDeleteGal');
-			handleModal('SettingsGalModal', 'SettingsGalBtn', 'closeSettingsGal');
-			handleModal('ShareGalModal', 'ShareGalBtn', 'closeShareGal');
-
-			{%for image in image_sets %}
-			handleModal('ImageGalModal', `ImageGalBtn{{image.id}}`, 'closeImageGal')
-			{% endfor %}
-			
-		});
-
-	};
-	
-	
-</script>
-<script src={% static 'js/clipboard.js' %}></script>
 <script src={% static 'js/loadMore.js' %}></script>
+
 <script src={% static 'js/mini_gallery.js' %}></script>
 <script src={% static 'js/select_all.js' %}></script>
 <script src={% static 'js/galFunk.js' %}></script>
-<script src={% static 'js/galleryFunctions.js' %}></script>
 {% endblock %}
 

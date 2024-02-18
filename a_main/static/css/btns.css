@@ -1,0 +1,123 @@
+/* --------------------------------
+button
+--------------------------------*/
+
+.btn-cust{
+  font: var(--p);
+  color: var(--mc-7);
+  background-color: var(--mc-3-o);
+  padding: 10px 21px;
+  border: 2px solid var(--line-border-fill);
+  box-shadow: var(--bg-shadow);
+  border-radius: 8px;
+  transition : 777ms;
+  align-items: center;
+  margin: 5px;
+  min-width: 165px;
+  cursor: pointer;
+}
+
+.btn-icon {
+  font: var(--p);
+  color: var(--mc-7);
+  background-color: var(--mc-3-o);
+  padding: 8px 8px;
+  border: 2px solid var(--line-border-fill);
+  box-shadow: var(--bg-shadow);
+  border-radius: 8px;
+  transition : 777ms;
+  align-items: center;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.btn-icon-disabled {
+  font: var(--p);
+  color: var(--mc-7);
+  background-color: var(--mc-2-o);
+  padding: 8px 8px;
+  border: 2px solid var(--bg-5);
+  box-shadow: rgb(0, 0, 0) 0px 0px 0px 0px;
+  border-radius: 8px;
+  transition : 777ms;
+  align-items: center;
+  cursor: pointer;
+}
+.btn-icon-img {
+  position: absolute;
+  top:5px;
+  left:95%;
+  font: var(--p);
+  color: var(--mc-7);
+  background-color: var(--mc2-5);
+  padding: 8px 8px;
+  border: 2px solid var(--line-border-fill);
+  box-shadow: var(--bg-shadow);
+  border-radius: 8px;
+  transition : 777ms;
+  align-items: center;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.btn-cust:hover,
+.btn-icon:hover,
+.btn-icon:active,
+.btn-icon-img:active,
+.btn-icon-img:hover {
+  transition : 777ms;
+  background-color: rgba(53, 52, 52, 0);
+  color: var(--mc-6);
+  border: solid 2px var(--mc-4);
+}
+
+
+
+.right-i{
+  width:25px; 
+  margin-left:24px; 
+  margin-right:2px; 
+  flex-direction: row-reverse;
+}
+
+.left-i{
+  width:25px; 
+  margin-left:2px; 
+  margin-right:24px; 
+  flex-direction: row-reverse;
+}
+
+
+/*------------------------/
+tool tip
+/------------------------*/
+
+.tooltip-obj {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+/* Define initial state for the tooltip */
+.tooltip-obj .tooltiptext {
+  opacity: 0; /* Start with opacity 0 */
+  width: 120px;
+  background-color: rgba(0, 0, 0, 0.829);
+  color: var(--mc-6);
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 5px;
+
+  position: absolute;
+  top: 45px;
+  left: -25px;
+  z-index: 1;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 1s, transform 1s; 
+}
+
+.tooltip-obj:hover .tooltiptext {
+  opacity: 1; 
+  transform: translateY(0); 
+}

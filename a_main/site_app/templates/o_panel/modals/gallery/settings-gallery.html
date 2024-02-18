@@ -1,0 +1,101 @@
+<div id="SettingsGalModal" class="details-modal">
+
+	<input id='settingsDisplayURL' value="{% url 'settings-display-endpoint' display.slug %}" hidden>
+
+	<div class="details-content overflow-auto">
+		<span class="closeDetails" id="closeSettingsGal"><i class="fa-solid fa-circle-xmark fa-lg icon-color"></i></span>
+		
+
+			<h1 class='h1-1'>Gallery Settings</h1>
+			<hr>
+			<form id='galSettingsForm' method=POST >
+				<div class='sections-2'>
+					{% csrf_token %}
+
+					<div class='row'>
+
+						<div class='col-10'>
+							<p class='p-b'>Visibal:</p>
+							<p class='p-p'>
+								Toggle the switch to "on" to set the gallery visibility to private. 
+								Doing so will prevent this gallery from being seen by anyone except 
+								users with access to this application. Please note that setting the 
+								gallery to private does not affect its visibility on the client-facing 
+								site.
+							</p>
+						</div>
+						<div class='col-2'>
+							
+							<div class="form-check form-switch">
+								{% if display.settings|slice:"0:1" == "0" %}
+								<input class="form-check-input" type="checkbox" name="visiable" id="id_visiable">
+								{% else %}
+								<input class="form-check-input" checked type="checkbox" name="visiable" id="id_visiable">
+								{% endif %}
+							</div>
+					
+						</div>
+						<div class='col-10'>
+							<p class='p-b'>Site Gallery:</p>
+							<p class='p-p'>
+								Toggle the switch to "on" to display the gallery on the client facing site.
+							</p>
+						</div>
+						<div class='col-2'>
+							
+							<div class="form-check form-switch">
+								{% if display.settings|slice:"1:2" == "0" %}
+								<input class="form-check-input" type="checkbox" name="site" id="id_site">
+								{% else %}
+								<input class="form-check-input" checked type="checkbox" name="site" id="id_site">
+								{% endif %}
+							</div>
+					
+						</div>
+						<div class='col-10'>
+							<p class='p-b'>Random Order:</p>
+							<p class='p-p'>
+								Toggle the switch to "on" to display the gallery in random order. This option affects 
+								only images on the client-facing site.
+							</p>
+						</div>
+						<div class='col-2'>
+							
+							<div class="form-check form-switch">
+								{% if display.settings|slice:"2:3" == "0" %}
+								<input class="form-check-input" type="checkbox" name="random" id="id_random">
+								{% else %}
+								<input class="form-check-input" checked type="checkbox" name="random" id="id_random">
+								{% endif %}
+							</div>
+					
+						</div>
+						<div class='col-10'>
+							<p class='p-b'>Lock:</p>
+							<p class='p-p'>
+								Toggle the switch to "on" to prevent the gallery from being deleted.
+								Unused galleries will be deleted 90 days after creation. To prevent deletion, 
+								you can lock the gallery. This does not apply to using the Delete Gallery button. 
+								that will still delete the gallery. 					
+							</p>
+						</div>
+						<div class='col-2'>
+							
+							<div class="form-check form-switch">
+								{% if display.settings|slice:"3:4" == "0" %}
+								<input class="form-check-input" type="checkbox" name="lock" id="id_lock">
+								{% else %}
+								<input class="form-check-input" checked type="checkbox" name="lock" id="id_lock">
+								{% endif %}
+							</div>
+					
+						</div>
+						
+					</div>
+					<button class='btn-cust'>Update Settings</button>		
+				</div>	
+			</form>	
+
+		</div>		
+	</div>
+</div>

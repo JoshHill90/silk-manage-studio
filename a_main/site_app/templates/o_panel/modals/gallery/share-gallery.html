@@ -1,0 +1,34 @@
+<div id="ShareGalModal" class="details-modal">
+
+	<input id='shareDisplayURL' value="{% url 'share-display-endpoint' display.slug %}" hidden>
+
+	<div class="details-content overflow-auto">
+		<span class="closeDetails" id="closeShareGal"><i class="fa-solid fa-circle-xmark fa-lg icon-color"></i></span>
+		<h1 class='h1-1'>Share Gallery</h1>
+		<p class='p-p'>Generate a link that you can share with external users to view the gallery</p>
+		<hr>
+		<div class='row'>
+
+			<div class='col-12 mt-4 mb-4 col-md-4'>
+				<form method="post" id='shareDisplayForm'>
+					{% csrf_token %}
+					<div class='col-12'>
+						<label class='p-p' for="id_daysExpire">Set days until link expires</label>
+						<input class='form-control' value='90' type="number" name="daysExpire" maxlength="255" required="" id="id_daysExpire">
+					</div>
+					<button class=' mt-4 btn-cust'>
+						Create Gallery Link
+					</button>
+				</form>
+			</div>
+			<hr>
+			<div class='col-4'>
+				<label class='p-p' for="id_shared_gallery">Please Copy this URL: <i class="fa-regular fa-copy" onclick="copyToClipboard('ShareUrl')"></i></label>
+				
+				<input class='form-control' value='' type="text" name="ShareUrl" maxlength="3000" required="" id="ShareUrl" disabled>
+			</div>
+
+
+		</div>		
+	</div>
+</div>

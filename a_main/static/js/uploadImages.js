@@ -45,7 +45,7 @@ async function uploadFiles(event) {
 
     event.preventDefault();
     const csrftoken = getCookie('csrftoken');
-    const fileLimit = 100; // max items
+    const fileLimit = 60; // max items
     const imageFiles = imageUpload.files; //images
     // removes the current divs showing the upload form
 	uploadDiv.classList.add('noshow')

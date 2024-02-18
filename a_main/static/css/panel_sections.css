@@ -98,7 +98,10 @@
 
 .section-scroll-2 {
 	height: 80vh;
-	max-width: 95%;
+
+}
+.row-scroll {
+	max-width: 90%;
 }
 
 .section-dt {
@@ -150,7 +153,7 @@
 }
 
 
-@media screen and (max-width: 768px){
+@media screen and (max-width: 1024px) and (orientation: portrait){
 	.section-form {
 		width: 100%;
 	}
@@ -160,7 +163,27 @@
 	.section-mb {
 		display: block;
 	}
-	
+
+	.section-scroll-2 {
+		height: 30vh;
+		max-width: 95%;
+	}
+}
+
+@media screen and (max-width: 1024px) and (orientation: landscape){
+	.section-form {
+		width: 100%;
+	}
+	.section-dt {
+		display: none;
+	}
+	.section-mb {
+		display: block;
+	}
+	.section-scroll-2 {
+		height: 70vh;
+		max-width: 95%;
+	}
 }
 
 .display-off {

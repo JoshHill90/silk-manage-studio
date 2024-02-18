@@ -1,0 +1,34 @@
+
+
+<div id="createGalWindowCall" class="details-modal">
+	<input id='createDisplayURL' value="{% url 'create-display-endpoint' %}" hidden>
+
+
+	<div class="details-content overflow-auto">
+		<span class="closeDetails" id="closeCreateGal"><i class="fa-solid fa-circle-xmark fa-lg icon-color"></i></span>
+		<div class='row'>
+			<div class='col-12 mt-4 mb-4 col-md-4'>
+				<h1 class='h1-1'>Create New Gallery</h1>
+				<p class='p-p'>Enter a name and click the add button</p>
+				<hr>
+				<form id='CreateGalForm' method=POST >
+					<div class='sections-2'>
+						{% csrf_token %}
+						<div class='row'>
+							<div class='col-12'>
+								<label class='p-p' for="id_create_gallery">Name:</label>
+								<input class='form-control' value='' type="text" name="create_gallery" maxlength="255" required="" id="id_create_gallery">
+							</div>
+						</div>
+					</div>
+
+					<button class="mt-4 btn-cust">
+						Create
+					</button>
+
+				</form>
+			</div>
+
+		</div>		
+	</div>
+</div>

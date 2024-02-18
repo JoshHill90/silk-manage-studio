@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect 
 from django.urls import reverse 
 from django.conf import settings
-from .models import Image, Dispaly, Tag
+from .models import Image, Display, Tag, DisplayKey
 from client.models import Project
 from django.core.paginator import Paginator
 from a_main.env.app_Logic.photo_layer import col3_col6_col3
@@ -11,9 +11,11 @@ from a_main.env.app_Logic.untility.quick_tools import ViewExtendedFunctions, Dat
 from a_main.env.cloudflare_API.CFAPI import APICall, Encode_Metadata
 from a_main.env.cloudflare_API.CFR2API import CloudflareR2API
 from logs.logging_config import logging
+from a_main.env.app_Logic.KeyPass import SETTINGS_KEYS
 import json
 from django.utils.text import slugify
 import zlib
+import secrets
 r2_api_call = CloudflareR2API()
 cf_api_call= APICall()
 vef = ViewExtendedFunctions()
@@ -44,7 +46,7 @@ def manage_gallery(request, slug):
 	
 	try:
 		all_images = Image.objects.all().distinct()
-		display = Dispaly.objects.get(slug=slug)
+		display = Display.objects.get(slug=slug)
 		current_images = display.images.all()
 
 		print()
@@ -134,18 +136,18 @@ def all_image_list(request):
  
 	return render(request, template_name, {'image_sets':image_sets, 'last_page': last_page})
 
-# endpoint for clearing selected gallery images
+# endpoint for loading more gallery images
 def load_more_enpoint(request, slug):
 	print('load more ', slug)
 	image_in_display = []
 	
 	all_images = Image.objects.all().distinct().only('id', 'project_id', 'title', 'image_link')
 	if slug == 'None':
-		display_object = Dispaly.objects.all()
+		display_object = Display.objects.all()
 		image_in_display = []
 
 	else:
-		display_object = Dispaly.objects.get(slug=slug)
+		display_object = Display.objects.get(slug=slug)
 		for img_id in display_object.images.all():
 			image_in_display.append(img_id.id)
 			print(img_id)
@@ -177,7 +179,7 @@ def load_more_enpoint(request, slug):
 
 # endpoint for clearing selected gallery images
 def clear_gallery_endpoint(request, slug):
-	display_object = Dispaly.objects.get(slug=slug)
+	display_object = Display.objects.get(slug=slug)
 	
 	if request.method == 'GET':
 		display_object.header_image = None
@@ -187,15 +189,30 @@ def clear_gallery_endpoint(request, slug):
 		reps = json.dumps({'sucess': 'sucess'})
 		return HttpResponse(reps)
 
+def create_display_endpoint(request):
 	
-def image_upload(request):
 	
-	return render(request, 'o_panel/images/image_upload.html')
+	if request.method == 'POST':
+		try:
+			json_data = json.loads(request.body)
+			name = json_data.get('name')
+
+			display_object = Display.objects.create(name=name)
+			display_object.save()
+
+			return HttpResponse({'success':'sucess'})
+		except ValueError as e:
+			logging.error("Client Invite Error: %s", str((e)))
+			slugified_error_message = slugify(str(e))
+			return HttpResponse({'issue-backend':f'issue-backend {e}'}, status=500, error_message=slugified_error_message)
+
 #-------------------------------------------------------------------------------------------------------#
 # Image upload views
 #-------------------------------------------------------------------------------------------------------#
 
-
+def image_upload(request):
+	
+	return render(request, 'o_panel/images/image_upload.html')
 
 def image_form(request, data_packet):
 	
@@ -205,7 +222,7 @@ def image_form(request, data_packet):
 	if not list_data:
 		return redirect('issue-backend', status='400', error_message='image-failed-upload')
 	tags_object = Tag.objects.all()
-	display_objects = Dispaly.objects.all()
+	display_objects = Display.objects.all()
 	project_objects = Project.objects.all()
 
 	return render(request, 'o_panel/images/image-create.html',
@@ -323,9 +340,50 @@ def create_image_endpoint(request):
 	
 			images.tag.add(tag_instance.id)
    
-	display_object =  Dispaly.objects.all()
+	display_object =  Display.objects.all()
 	for display in set_display:
 		display_instance =  display_object.get(id=display)
 		display_instance.images.set(image_list)
 
 	return HttpResponse({'success':'success'})
+
+#  Gallery functions
+
+def display_settings_endpoint(request, slug):
+	settings_value = lambda setting: 0 if setting == False else(1) 
+	
+	if request.method == 'PUT':
+		current_display = Display.objects.get(slug=slug)
+		settings = json.loads(request.body)
+		settings_update = (
+	  		str(settings_value(settings.get('visiable'))) + 
+			str(settings_value(settings.get('site'))) + 
+			str(settings_value(settings.get('random'))) + 
+			str(settings_value(settings.get('lock'))) 
+   		)
+		current_display.settings = settings_update
+		current_display.save()
+
+	return HttpResponse({'success':'success'})
+
+def display_delete_endpoint(request, slug):
+	if request.method == 'DELETE':
+		current_display = Display.objects.get(slug=slug)
+		current_display.delete()
+	return HttpResponse({'success':'success'})
+
+def display_share_endpoint(request, slug):
+	if request.method == 'POST':
+
+		byte_string = int(json.loads(request.body))
+		expire = str(DateFunction().number_to_days(byte_string))
+		current_display = Display.objects.get(slug=slug)
+		new_key = secrets.token_hex(16)
+		DisplayKey.objects.create(
+			key=new_key,
+			expire=expire,
+			display=current_display
+		)
+	base_site = str(SETTINGS_KEYS.SHARE_GALLERY)
+	full_url = base_site + f'?gallery=${new_key}'
+	return HttpResponse(json.dumps({'url':full_url}))

@@ -8,7 +8,7 @@ from django.conf import settings
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .models import Contact, Document
-from gallery.models import Image, Dispaly
+from gallery.models import Image, Display
 from client.models import Project, Client
 from .forms import ContactForm
 from a_main.env.app_Logic.smtp.MailerDJ import AutoReply
@@ -174,7 +174,7 @@ def marketing(request):
 	return render(request, 'o_panel/marketing.html')
 
 def o_gallery(request):
-	display = Dispaly.objects.all()
+	display = Display.objects.all()
 	return render(request, 'o_panel/gallery.html', {'display': display})
 
 

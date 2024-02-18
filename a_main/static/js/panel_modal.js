@@ -12,6 +12,7 @@ function handleModal(modalSet, buttonSet, numberClose){
 
   // When the user clicks the button, open the modal 
   detailsBtn.onclick = function() {
+
     detailsWindow.style.display = "block";
     window.scrollTo(10, 10);
   }

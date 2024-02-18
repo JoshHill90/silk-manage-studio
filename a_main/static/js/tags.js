@@ -5,7 +5,7 @@
 const tagDiv = document.getElementById('tags');
 const tagInput = document.getElementById('id_tagCreate');
 const tagForm = document.getElementById('id_tag');
-const displayInput = document.getElementById('id_display');
+
 const displayTags = document.getElementsByClassName('displayOptions');
 //-------------------------------//-------------------------------//-------------------------------//
 // tag event listener, check for the enter key to create a new tag, 
@@ -81,6 +81,7 @@ function displayHandler (targetObj) {
 	}
 
 }
+
 for (i = 0; i < displayTags.length; i++){
 	displayTags[i].addEventListener('click', function(event){
 		displayHandler(event);

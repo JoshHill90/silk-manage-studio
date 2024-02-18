@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Contact, Document
-from gallery.models import Image, Dispaly
+from gallery.models import Image, Display
 #from blog.models import Blog
 from user.models import credit, Coupon, Invoice, LineItem
 from client.models import Client, Project, ProjectEvents, ProjectRequest, RequestReply, ProjectTerms, Invite, Note
@@ -14,7 +14,7 @@ admin.site.register(credit)
 admin.site.register(Client)
 admin.site.register(Invite)
 admin.site.register(Note)
-admin.site.register(Dispaly)
+admin.site.register(Display)
 admin.site.register(Invoice)
 admin.site.register(LineItem)
 admin.site.register(Document)

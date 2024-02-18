@@ -1,0 +1,33 @@
+<div id="ShareGalModal" class="details-modal">
+
+	<input id='ShareGalModal' value="{% url 'share-display-endpoint' display.slug %}" hidden>
+
+	<div class="details-content overflow-auto">
+		<span class="closeDetails" id="closeDeleteGal"><i class="fa-solid fa-circle-xmark fa-lg icon-color"></i></span>
+		<h1 class='h1-1'>Delete Gallery</h1>
+		<p class='p-p'>This will only delete the gallery, not the images associated with it.</p>
+		<hr>
+		<div class='row'>
+
+			<div class='col-12 mt-4 mb-4 col-md-4'>
+				<form method="post" id='shareDisplayForm'>
+					{% csrf_token %}
+					
+					<button class='btn-cust'>
+						Create Gallery Link
+					</button>
+				</form>
+			</div>
+			<div class='col-12'>
+				<label class='p-p' for="id_shared_gallery">Name:</label>
+				<input class='form-control' value='' type="text" name="shared_gallery" maxlength="255" required="" id="id_shared_gallery">
+			</div>
+			<div class='col-12 mt-4 mb-4 col-md-4'>
+				<h1 class='h1-1'>Gallery Link</h1>
+				<p class='p-p'></p>
+				<hr>
+			</div>
+
+		</div>		
+	</div>
+</div>

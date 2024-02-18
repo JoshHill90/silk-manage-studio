@@ -3,7 +3,7 @@ const loaderBlocks = document.querySelectorAll('.windowLoader');
 const floaters = document.querySelectorAll('.float-in');
 const floaters2 = document.querySelectorAll('.float-in-sec');
 
-const sliders = document.querySelectorAll('#slide-in');
+const sliders = document.querySelectorAll('.slide-up');
 
 document.addEventListener("mousemove", parallax);
 document.addEventListener("scroll", parallax);
@@ -65,7 +65,7 @@ function parallax(e){
   var loaderBlocksN = document.querySelectorAll('.windowLoader');
   var floatersN = document.querySelectorAll('.float-in');
   var floaters2N = document.querySelectorAll('.float-in-sec');
-  var slidersN = document.querySelectorAll('#slide-in');
+  var slidersN = document.querySelectorAll('slide-up');
 
 
   floatersN.forEach(floater => {
@@ -80,9 +80,6 @@ function parallax(e){
   slidersN.forEach(slider => {
       appearOnScroll.observe(slider);
 
-      if (slider.classList == 'slide-left'){
-        console.log('slider here')
-      }
   });
 
   fadersN.forEach(fader => {

@@ -6,19 +6,28 @@
 <div class='row mt-4 mb-4'>
 	<div class='col-12 h-100'>
 		<div class='section-small'>
-			<h1 class='h1-1'>
-				Manage Site Gallery
-			</h1>
-			<hr>
 			<div class='row'>
-				<div class='col-12 col-md-6 col-lg-4'>
-					<a href="{% url 'image-details' %}">				
-						<div class='section-pad addLoader text-center'>
-							<i class="fa-regular fa-image fa-2xl"></i>
-							<p class='mt-2'>All Images</p>
-						</div>
-					</a>
-				</div>
+				<div class='col-12  mt-3 col-md-3'>
+					<h1 class='h1-1'>
+						Manage Galleries
+					</h1>
+				</div>		
+				<div class='col-12 mt-1 col-md-1'>
+					<button  class='tooltip-obj btn-icon w-100' onclick="window.location.href='{% url 'image-details'%}'">
+						<span class='tooltiptext'>Manage All Images</span> <i class="fa-regular fa-image fa-2xl"></i>
+					</button>
+				</div>	
+				<div class='col-12 mt-1 col-md-1'>
+					<button  class='tooltip-obj btn-icon w-100' id="createGalBtn" onclick="handleModal('createGalWindowCall', 'createGalBtn', 'closeCreateGal')">
+						<span class='tooltiptext'> Create New Gallery </span><i class="fa-regular fa-images fa-2xl"></i>
+					</button>
+				</div>	
+			</div>
+
+			<hr>
+
+			<div class='row'>
+
 				{% for gal in display%}
 
 				<div class='col-12 col-md-6 col-lg-4'>
@@ -35,10 +44,23 @@
 	</div>
 </div>
 
-<div class='row mt-4 mb-4'>
-</div>
+<!-- Create Galleryt -->
+{% include "o_panel/modals/gallery/create-gallery.html" %}
 
+<script src={% static 'js/createGal.js' %}></script>
+<script>
+	function initializeModals() {
+		
+		document.addEventListener("DOMContentLoaded", function() {
+			
+			handleModal('createGalWindowCall', 'createGalBtn', 'closeCreateGal');
+			
+		});
 
-<script src={% static 'js/graphs.js' %}></script>
+	};
+	
+	initializeModals();
+</script>
+
 
 {% endblock %}

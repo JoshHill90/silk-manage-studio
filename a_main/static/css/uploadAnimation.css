@@ -92,8 +92,9 @@
 .section-specail {
 	font: var(--p);
 	color: #ffffff;
-	background-color: var(--mc-4);
-	padding: 10px 21px;
+  background-color: var(--mc-3-o);
+  padding: 10px 21px;
+  opacity: .4;
 	border: 2px solid var(--mc-6);
 	box-shadow: var(--bg-shadow);
 	border-radius: 16px;
