@@ -37,13 +37,14 @@ submitButton.addEventListener( 'click', async (event) => {
 	uploadAnimationDiv1.classList.remove('noshow');
 	loadValid.style.display = 'flex';
 	const data = []
-	if (titleValue === '') {
+
+	
+	const titleElement = document.getElementById('id_title');
+	if (titleElement.value === '') {
 
         alert('Please enter a title.');
         return;
     }
-	
-	const titleElement = document.getElementById('id_title');
 	const tagElement = document.getElementById('id_tag');
 	const displayElement = document.getElementById('id_display');
 	const projectElement = document.getElementById('id_project_id');
