@@ -98,59 +98,24 @@
 					
 				<div class="row text-center" id='loaderRow'>
 					{%for image in image_sets %}
-					<div class="col mt-4 mb-4 slide-up" id='slide-in'>
-						{% if image in current_list %}
-						<div class="image-card-a" id='{{ image.id }}'>
+					<div class="col mt-4 mb-4 slide-up">
+
+						<div class="image-card" id="{{image.id}}" >
 							<input 
 								class="noshow checkImage form-check-input" 
-								checked type="checkbox" 
-								name='checkbox{{image.id}}' 
+								type="checkbox" name='checkbox{{image.id}}'
 								value="{{image.id}}" 
 								id="id_check{{image.id}}"
 							>
-						{% else %}
-						<div class="image-card" id='{{ image.id }}'>
-							<input 
-								class="noshow checkImage form-check-input" 
-								type="checkbox" name='checkbox{{image.id}}' 
-								value="{{image.id}}" 
-								id="id_check{{image.id}}"
-							>
-						{% endif %}
+
 							<label for="id_check{{image.id}}" class="image-card-info">
 								<img 
-								class='image-list'
-								id='img{{image.id}}' 
+								class='image-list' 
 								load='lazy' 
 								src="{{ image.image_link }}" 
 								>
-							
-								<div class="row title">
-
-
-									<div class='col-6'>
-										<p class='p-p'>
-											ID: #{{ image.id }}
-										</p>
-									</div>
-									
-									<div class='col-12'>
-										<p class='p-p'>
-											Project: {{ image.project_id|title}}
-										</p>
-									</div>
-
-									<div class='col-12'>
-										<p class='p-p'>
-											Title: {{ image.title|title }} 
-										</p>
-									</div>
-	
-		
-								</div>
 							</label >
 						</div>
-						
 					</div>
 					{% endfor %}
 

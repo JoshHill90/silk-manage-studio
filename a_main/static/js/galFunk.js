@@ -25,13 +25,31 @@ async function clear() {
 		alert('refesh and retry, if the issue persist pelase contact the admin');
 	} else {
 		
-		imageClear();
+		await imageClear();
 	};
 
 };
 
 async function imageClear(){
-	var checkedImg = document.querySelectorAll('.checkImage');;
+	var checkedImg = document.querySelectorAll('.checkImage');
+	document.getElementById('currentList').hidden = true;
+	document.getElementById('viewerImage').hidden = true;
+
+	var emptyDiv = document.getElementById('emptyText');
+
+	const coldiv = document.createElement('div');
+	coldiv.classList.add('col-12');
+	emptyDiv.appendChild(coldiv);
+	
+	const carddiv = document.createElement('div');
+	carddiv.classList.add('cardSlide', 'mt-4', 'mb-4');
+	coldiv.appendChild(carddiv);
+
+	const h1div = document.createElement('h1');
+	h1div.classList.add('h1-1', 'text-center');
+	h1div.innerHTML = 'Please use the gallery controls to add images.';
+	carddiv.appendChild(h1div);
+
 	for (i = 0; i < checkedImg.length; ++i) {
 		
 		if (checkedImg[i].checked == true) {

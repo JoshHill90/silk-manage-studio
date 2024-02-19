@@ -24,6 +24,7 @@ deletButton.addEventListener('click', (clicked) => {
         imageArray.push(selectedCard[set].id)
 		selectedCard[set].parentNode.remove()
 	}
+    console.log(imageArray)
     const csrfGet = getCookie('csrftoken');
     const data = { 'data': imageArray};
     //-------------------------------//

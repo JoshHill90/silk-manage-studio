@@ -42,7 +42,7 @@
 	</div>
 	<hr>
 	{% if current_list %}
-	<div class='col-12 col-md-6'>
+	<div class='col-12 col-md-6' id='viewerImage'>
 		<div class='overflow-auto section-scroll-2'>
 			<div class="row row-scroll">
 				<div class='col-10 col-md-8'>
@@ -72,7 +72,7 @@
 		</div>
 
 	</div>
-	<div class='col-12 col-md-6'>
+	<div class='col-12 col-md-6' id='currentList'>
 		
 		<div class='section-min'>
 			  
@@ -105,7 +105,9 @@
 
 		</div>
 	</div>
+	<div class='col-12' id='emptyText'>
 
+	</div>
 	{% else %}
 	<div class='col-12'>
 		<div class='cardSlide mt-4 mb-4'>
@@ -212,20 +214,21 @@
 					{%for image in image_sets %}
 					<div class="col mt-4 mb-4 slide-up">
 						{% if image in current_list %}
-						<div class="image-card-a">
+						<div class="image-card-a" id="{{image.id}}" >
 							<input 
 								class="noshow checkImage form-check-input" 
 								checked type="checkbox" 
 								name='checkbox{{image.id}}' 
-								value="{{image.id}}" 
+								value="{{image.id}}"
 								id="id_check{{image.id}}"
 							>
 							{% else %}
-						<div class="image-card">
+						<div class="image-card" id="{{image.id}}" >
 							<input 
 								class="noshow checkImage form-check-input" 
-								type="checkbox" name='checkbox{{image.id}}' 
-								value="{{image.id}}" 
+								type="checkbox" 
+								name='checkbox{{image.id}}' 
+								value="{{image.id}}"
 								id="id_check{{image.id}}"
 							>
 						{% endif %}
@@ -236,17 +239,7 @@
 								src="{{ image.image_link }}" 
 								>
 							</label >
-							<div hidden id='img-title{{image.id}}' value="{{image.title}}"></div>
-							<div hidden id='img-image_link{{image.id}}' value="{{image.image_link}}"></div>
-							<div hidden id='img-project_id{{image.id}}' value="{{image.project_id}}"></div>
-							<div hidden id='img-first_name{{image.id}}' value="{{image.project_id.client_id.user_id.first_name}}"></div>
-							<div hidden id='img-last_name{{image.id}}' value="{{image.project_id.client_id.user_id.last_name}}"></div>
-
-							<div class='img-tags' value="{{image.tags}}"></div>
-							
-							<button class='btn-icon-img' onclick="modalImageInfo(event, '{{image.id}}')"> <i class="fa-regular fa-window-restore"></i></button>
 						</div>
-						
 					</div>
 					{% endfor %}
 
@@ -283,14 +276,12 @@
 		</div>
 		
 	</div>
-	{%for image in image_sets %}
-	<button id='ImageGalBtn{{image.id}}' hidden></button>
-	{% endfor %}
+
 
 </div>
 <!-- Create Galleryt -->
 {% include "o_panel/modals/gallery/share-gallery.html" %}
-{% include "o_panel/modals/gallery/image-info.html" %}
+
 {% include "o_panel/modals/gallery/delete-gallery.html" %}
 {% include "o_panel/modals/gallery/settings-gallery.html" %}
 
@@ -305,9 +296,7 @@
 			handleModal('SettingsGalModal', 'SettingsGalBtn', 'closeSettingsGal');
 			handleModal('ShareGalModal', 'ShareGalBtn', 'closeShareGal');
 
-			{%for image in image_sets %}
-			handleModal('ImageGalModal', `ImageGalBtn{{image.id}}`, 'closeImageGal')
-			{% endfor %}
+
 			
 		});
 

@@ -12,7 +12,9 @@ urlpatterns = [
     path('image/form/<slug:data_packet>', views.image_form, name='image-form'),
     path('image/all/', views.all_image_list, name='image-details'),
     path('api/v1/image/upload/', views.upload_token_endpoint, name='image-token'),
-    path('api/v1/image/create/', views.create_image_endpoint, name='image-token2'),
+    path('api/v1/image/create/', views.create_image_endpoint, name='create-image-endpoint'),
+    path('api/v1/image/create/tags', views.tags_image_endpoint, name='create-image-tags-endpoint'),
+    path('api/v1/image/create/gallery', views.gallery_image_endpoint, name='create-image-gallery-endpoint'),
     path('api/v1/image/delete/', views.delete_image_endpoint, name='image-token3'),
     
     path('api/v1/gallery/clear-gal/<slug:slug>/', views.clear_gallery_endpoint, name='gal-clear-endpoint'),

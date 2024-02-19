@@ -45,88 +45,75 @@ document.getElementById("loadMore").addEventListener("click", function(event){
 	}).catch(error => console.error('Error:', error));
 });
 
-function galleryDivs(gallerryData){
-	const current_gal =  gallerryData.displaySet; 
-	for(let data_set of gallerryData.imgObj){
+function galleryDivs(galleryData) {
+    const currentGal = galleryData.displaySet;
+    const loaderRow = document.getElementById('loaderRow');
 
-		
-		let itemId = data_set.id;
-		let itemTitle = data_set.title;
-		let itemImage = data_set.image_link;
-		let itemProject = data_set.project;
+    for (let data of galleryData.imgObj) {
+        let itemId = data.id;
+        let itemTitle = data.title;
+        let itemImage = data.image_link;
+        let itemProject = data.project;
 
-		// creates the container to hold the images list data
-		const parentCol = document.createElement('div');
-		parentCol.className = 'col mt-4 mb-4 slide-up';
-		parentCol.id = 'slide-in'
-		loaderRow.appendChild(parentCol);
+        const parentCol = document.createElement('div');
+        parentCol.className = 'col mt-4 mb-4';
 
-		// creates the image card
-		const imageCardDi = document.createElement('div');
-		
-		const inDisplay = current_gal.includes(parseInt(itemId));
-		console.log(inDisplay)
-		if (inDisplay) {
-			imageCardDi.className = 'image-card-a';
-		} else {
-			imageCardDi.className = 'image-card';
-		}
-		parentCol.appendChild(imageCardDi);
+        const imageCard = document.createElement('div');
 
-		const itemCheckDiv = document.createElement('input');
-		itemCheckDiv.className = 'noshow checkImage form-check-input';
-		itemCheckDiv.type = "checkbox";
-		itemCheckDiv.name = 'checkbox' + itemId;
-		itemCheckDiv.value=itemId; 
-		itemCheckDiv.id = "id_check" + itemId;
-		imageCardDi.appendChild(itemCheckDiv);
+        imageCard.id = itemId;
 
-		// creates the image card info
-		const imageInfoDi = document.createElement('label');
-		imageInfoDi.className = 'image-card-info';
-		imageInfoDi.htmlFor = "id_check" + itemId;
-		imageCardDi.appendChild(imageInfoDi);
+        const itemCheckDiv = document.createElement('input');
+        itemCheckDiv.className = 'noshow checkImage form-check-input';
+        itemCheckDiv.type = 'checkbox';
+        itemCheckDiv.name = 'checkbox' + itemId;
+        itemCheckDiv.value = itemId;
+        itemCheckDiv.id = 'id_check' + itemId;
+        imageCard.appendChild(itemCheckDiv);
 
-		const itemImageDiv = document.createElement('img');
-		itemImageDiv.src = itemImage;
-		itemImageDiv.load = 'lazy';
-		itemImageDiv.className = 'image-list';
-		imageInfoDi.appendChild(itemImageDiv);
+        if (currentGal.includes(parseInt(itemId))) {
+            imageCard.className = 'image-card-a';
+            itemCheckDiv.checked = true
+        } else {
+            imageCard.className = 'image-card';
+            itemCheckDiv.checked = false
+        }
 
-		//creates the row for the item data columns 
-		const itemRow = document.createElement('div');
-		itemRow.className = 'row title';
-		imageInfoDi.appendChild(itemRow);
+        const imageInfoDi = document.createElement('label');
+        imageInfoDi.className = 'image-card-info';
+        imageInfoDi.htmlFor = 'id_check' + itemId;
 
-		// id field 
-		const itemField2 = document.createElement('div');
-		itemField2.className = 'col-6';
-		itemRow.appendChild(itemField2);	
+        const itemImageDiv = document.createElement('img');
+        itemImageDiv.src = itemImage;
+        itemImageDiv.className = 'image-list';
+        itemImageDiv.setAttribute('load', 'lazy');
+        imageInfoDi.appendChild(itemImageDiv);
 
-		const itemIdDiv = document.createElement('p');
-		itemIdDiv.className = 'p-p';
-		itemIdDiv.innerHTML = 'ID: #' +itemId ;
-		itemField2.appendChild(itemIdDiv);
+        const hiddenDivs = document.createElement('div');
+        hiddenDivs.style.display = 'none';
+        hiddenDivs.id = 'hiddenDivs' + itemId;
 
-		// project name field
-		const itemField3 = document.createElement('div');
-		itemField3.className = 'col-12';
-		itemRow.appendChild(itemField3);
+        const imgTitleDiv = document.createElement('div');
+        imgTitleDiv.id = 'img-title' + itemId;
+        imgTitleDiv.innerHTML = itemTitle;
+        hiddenDivs.appendChild(imgTitleDiv);
 
-		const itemProjectDiv = document.createElement('p');
-		itemProjectDiv.className = 'p-p';
-		itemProjectDiv.innerHTML = 'Project: '+ itemProject;
-		itemField3.appendChild(itemProjectDiv);
+        const imgImageLinkDiv = document.createElement('div');
+        imgImageLinkDiv.id = 'img-image_link' + itemId;
+        imgImageLinkDiv.innerHTML = itemImage;
+        hiddenDivs.appendChild(imgImageLinkDiv);
 
-		// image titel
-		const itemField4 = document.createElement('div');
-		itemField4.className = 'col-12';
-		itemRow.appendChild(itemField4);
+        const imgProjectIdDiv = document.createElement('div');
+        imgProjectIdDiv.id = 'img-project_id' + itemId;
+        imgProjectIdDiv.innerHTML = itemProject;
+        hiddenDivs.appendChild(imgProjectIdDiv);
 
-		const itemtitleDiv = document.createElement('p');
-		itemtitleDiv.className = 'p-p';
-		itemtitleDiv.innerHTML ='Title: ' + itemTitle;
-		itemField4.appendChild(itemtitleDiv);
-	};
+        imageCard.appendChild(imageInfoDi);
+        imageCard.appendChild(hiddenDivs);
+
+
+        parentCol.appendChild(imageCard);
+        loaderRow.appendChild(parentCol);
+    }
 }
+
 

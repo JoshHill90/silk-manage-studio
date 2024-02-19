@@ -11,7 +11,9 @@
     {% for image in list_data %}
     <input name='cf{{forloop.counter}}' class='hiddenImage' value='{{image}}' hidden>
     {% endfor %}
-    <input id='apiUrl' value={% url 'image-token2' %} hidden>
+    <input id='apiUrl' value={% url 'create-image-endpoint' %} hidden>
+    <input id='apiTagUrl' value={% url 'create-image-tags-endpoint' %} hidden>
+    <input id='apiGalleryUrl' value={% url 'create-image-gallery-endpoint' %} hidden>
     <input id='redirect' value="{% url 'image-details'%}" hidden>
     <input id='errorUrl' value="{% url 'issue-backend' '400' 'image-create-error' %}" hidden>
     <div class="p-p" id='formBox'>
@@ -75,10 +77,24 @@
         </form>
     </div>
     <div class='row mt-4 mb-4'>
-        <div class='col-12 mt-4 noshow mb-4 float-in text-center' id='uploadAnimation'>
-          <div class="loaderVal mt-4 mb-4" id='validate'>
+        <div class='col-12 mt-4 noshow mb-4 float-in text-center' id='uploadAnimation1'>
+          <div class="loaderVal mt-4 mb-4" id='validateImage'>
             <div class="loaderVal-text"><h1 class='h1-1'>Adding Images to Database...</h1></div>
-            <div class="loaderVal-bar-1 slide-left" id='slide-in'></div>
+            <div class="loaderVal-bar-1 slide-up"></div>
+          </div>
+        </div>
+        <div class='col-12 mt-4 noshow mb-4 float-in text-center' id='uploadAnimation2'>
+            <div class="loaderVal mt-4 mb-4" id='validateTags'>
+              <div class="loaderVal-text"><h1 class='h1-1'>Adding tags to images to Database...</h1></div>
+              <div class="loaderVal-bar-1 slide-up"></div>
+            </div>
+          </div>
+        </div>
+        <div class='col-12 mt-4 noshow mb-4 float-in text-center' id='uploadAnimation3'>
+            <div class="loaderVal mt-4 mb-4" id='validateGallery'>
+              <div class="loaderVal-text"><h1 class='h1-1'>Adding images to gallery Database...</h1></div>
+              <div class="loaderVal-bar-1 slide-up"></div>
+            </div>
           </div>
         </div>
     </div>

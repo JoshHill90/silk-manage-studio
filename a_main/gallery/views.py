@@ -1,6 +1,6 @@
 from typing import Any
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect 
+from django.shortcuts import render, redirect
 from django.urls import reverse 
 from django.conf import settings
 from .models import Image, Display, Tag, DisplayKey
@@ -16,6 +16,8 @@ import json
 from django.utils.text import slugify
 import zlib
 import secrets
+from rest_framework.response import Response
+from .serializers import ImageSerializer
 r2_api_call = CloudflareR2API()
 cf_api_call= APICall()
 vef = ViewExtendedFunctions()
@@ -86,6 +88,7 @@ def manage_gallery(request, slug):
 
 				for image_value, image_key in zip(request.POST.values(),  request.POST.keys()):
 					if 'checkbox' in image_key:
+						print(image_key)
 						image_listed.add(image_value)
 		
 				# filter for selected values
@@ -237,49 +240,162 @@ def image_form(request, data_packet):
 # Image API endpoints
 #-------------------------------------------------------------------------------------------------------#
 
+#-------------------------------------------------------------------------------------------------------#
+# image processing endpoints
+#-------------------------------------------------------------------------------------------------------#
+
 def upload_token_endpoint(request):
 	data_packet = []
 	cfId_slug = ''
 	if request.method == 'POST':
-		for cf_object in json.load(request)['data'] :
+		try:
+			for cf_object in json.load(request)['data'] :
+				
+				slug_id =' ' + str(cf_object)
+				cfId_slug = cfId_slug + slug_id
+			compressed_data = zlib.compress(cfId_slug.encode())
+			data_packet = compressed_data.hex()
 			
-			slug_id =' ' + str(cf_object)
-			cfId_slug = cfId_slug + slug_id
-		compressed_data = zlib.compress(cfId_slug.encode())
-		data_packet = compressed_data.hex()
-		
-		image_form_url = reverse('image-form', args=[data_packet])
-		return HttpResponse(json.dumps(image_form_url))
+			image_form_url = reverse('image-form', args=[data_packet])
+			return HttpResponse(json.dumps(image_form_url))
+
+		except ValueError as e:
+			logging.error("error creating token in the upload process: %s", str((e)))
+			slugified_error_message = slugify(str(e))
+			return HttpResponse(json.dumps({'status':500, 'error_message':slugified_error_message}))
 	
 	elif request.method == 'GET':
-		post_data = []
-		cloudflare_token = cf_api_call.get_batch_token()
-		if 'error' not in cloudflare_token:
-			cloudflare_token = str(cloudflare_token)
-			front_end_url = 'https://batch.imagedelivery.net/images/v1'
+		try:
+			post_data = []
+			cloudflare_token = cf_api_call.get_batch_token()
+			if 'error' not in cloudflare_token:
+				cloudflare_token = str(cloudflare_token)
+				front_end_url = 'https://batch.imagedelivery.net/images/v1'
 
-			post_data.append({'cf_token':cloudflare_token,'cf_url': front_end_url})
+				post_data.append({'cf_token':cloudflare_token,'cf_url': front_end_url})
 
-		else:
-			e = cloudflare_token
+			else:
+				e = cloudflare_token
+				logging.error("error creating token in the upload process: %s", str((e)))
+				slugified_error_message = slugify(str(e))
+				return redirect('issue-backend', status=500, error_message=slugified_error_message)
+		
+			return JsonResponse(post_data, safe=False)
+
+		except ValueError as e:
 			logging.error("Client Invite Error: %s", str((e)))
 			slugified_error_message = slugify(str(e))
-			return redirect('issue-backend', status=500, error_message=slugified_error_message)
-	
-		return JsonResponse(post_data, safe=False)
+			return HttpResponse(json.dumps({'status':500, 'error_message':slugified_error_message}))
+
 	else:
 		return JsonResponse({'error': 'Invalid request method'})
+
+def create_image_endpoint(request):
 	
+	if request.method == 'POST':
+		try:
+			formData = json.load(request)
+			datalist = formData.get('data')
+			datalist[0].get('title')
+			set_project = datalist[1].get('project')
+			set_title = datalist[0].get('title')
+			cfId_set = datalist[2].get('cf_id')
+			project_instance = Project.objects.get(id=set_project)
+			slected_client = project_instance.client_id
+			
+			imgobj_list = []
+
+			for cf_id in cfId_set:
+				#print('upload')
+				image_url = f'https://imagedelivery.net/4_y5kVkw2ENjgzV454LjcQ/{cf_id}/display'
+				imgobj = Image(
+					title=str(set_title) + ' -' + str(cf_id[(len(cf_id) - 5): -1]),
+					client_id=slected_client,
+					project_id=project_instance,
+					image_link=image_url,
+					cloudflare_id=cf_id,
+				)
+
+				imgobj_list.append(imgobj)
+			
+			new_images = Image.objects.bulk_create(imgobj_list)
+			
+			image1Set = ImageSerializer(new_images, many=True)
+			image_data = {'image1Set':image1Set.data }
+
+			return HttpResponse(json.dumps(image_data))
+		except ValueError as e:
+			logging.error("Client Invite Error: %s", str((e)))
+			slugified_error_message = slugify(str(e))
+			return HttpResponse(json.dumps({'status':500, 'error_message':slugified_error_message}))
+
+	else:
+		return JsonResponse({'error': 'Invalid request method'})
+
+def tags_image_endpoint(request):
+	if request.method == 'POST':
+		try:
+			request_data = json.loads(request.body)
+			new_images = request_data.get('imageList')
+			set_tags = request_data.get('tags')
+			tags_object = Tag.objects.all()
+			image_list = Image.objects.filter(title__in=new_images)
+		
+			for images in image_list:
+
+				for tags in set_tags:
+					tag_instance = tags_object.filter(name=tags)
+					if tag_instance:
+							tag_instance = tags_object.get(name=tags)
+					else:
+						tag_instance = tags_object.create(name=tags)
+						tag_instance.save()
+			
+					images.tag.add(tag_instance.id)
+			return HttpResponse({'success':'success'})
+
+		except ValueError as e:
+			logging.error("Client Invite Error: %s", str((e)))
+			slugified_error_message = slugify(str(e))
+			return HttpResponse(json.dumps({'status':500, 'error_message':slugified_error_message}))
+
+	else:
+		return JsonResponse({'error': 'Invalid request method'})
+
+def gallery_image_endpoint(request):
+	if request.method == 'POST':
+		try:
+			request_data = json.loads(request.body)
+			new_images = request_data.get('imageList')
+			set_display = request_data.get('displays')
+			print(new_images, set_display)
+			display_object =  Display.objects.all()
+			image_list = Image.objects.filter(title__in=new_images)
+			for display in set_display:
+				display_instance =  display_object.get(id=display)
+				display_instance.images.set(image_list)
+
+			return HttpResponse({'success':'success'})
+
+		except ValueError as e:
+			logging.error("Client Invite Error: %s", str((e)))
+			slugified_error_message = slugify(str(e))
+			return HttpResponse(json.dumps({'status':500, 'error_message':slugified_error_message}))
+
+	else:
+		return JsonResponse({'error': 'Invalid request method'})
+
+#  Gallery functions
 def delete_image_endpoint(request):
 	cf_id_chain = []
-	print('check-0')
+	
 	try:
 		formData = json.load(request)
 		datalist = formData.get('data')
 		deletedImages = Image.objects.filter(id__in=datalist).only('cloudflare_id', 'id')
   
 		for cf_id in deletedImages:
-			print(cf_id)
+			#print(cf_id)
 			cf_id_chain.append(cf_id.cloudflare_id)
 		deletedImages.delete()
 		data = {
@@ -295,59 +411,6 @@ def delete_image_endpoint(request):
 		logging.error("Client Invite Error: %s", str((e)))
 		slugified_error_message = slugify(str(e))
 		return redirect('issue-backend', status=500, error_message=slugified_error_message)
-
-def create_image_endpoint(request):
-	tags_object = Tag.objects.all()
-
-	formData = json.load(request)
-	datalist = formData.get('data')
-	datalist[0].get('title')
-	
-	set_tags = datalist[1].get('tag') 
-	set_display = datalist[3].get('display')
-	set_project = datalist[2].get('project')
-	set_title = datalist[0].get('title')
-	cfId_set = datalist[4].get('cf_id')
-	project_instance = Project.objects.get(id=set_project)
-	slected_client = project_instance.client_id
-	
-	imgobj_id = []
-
-	for cf_id in cfId_set:
-		print('upload')
-		image_url = f'https://imagedelivery.net/4_y5kVkw2ENjgzV454LjcQ/{cf_id}/display'
-		imgobj = Image(
-			title=str(set_title) + ' -' + str(cf_id[(len(cf_id) - 5): -1]),
-			client_id=slected_client,
-			project_id=project_instance,
-			image_link=image_url,
-			cloudflare_id=cf_id,
-		)
-		imgobj_id.append(imgobj)
-	
-	new_images = Image.objects.bulk_create(imgobj_id)
-	image_list = Image.objects.filter(title__in=new_images)
- 
-	for images in image_list:
-
-		for tags in set_tags:
-			tag_instance = tags_object.filter(name=tags)
-			if tag_instance:
-					tag_instance = tags_object.get(name=tags)
-			else:
-				tag_instance = tags_object.create(name=tags)
-				tag_instance.save()
-	
-			images.tag.add(tag_instance.id)
-   
-	display_object =  Display.objects.all()
-	for display in set_display:
-		display_instance =  display_object.get(id=display)
-		display_instance.images.set(image_list)
-
-	return HttpResponse({'success':'success'})
-
-#  Gallery functions
 
 def display_settings_endpoint(request, slug):
 	settings_value = lambda setting: 0 if setting == False else(1) 
