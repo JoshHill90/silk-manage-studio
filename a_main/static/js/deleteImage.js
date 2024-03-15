@@ -16,6 +16,7 @@ const batchURL = document.getElementById('cf_batch_url').value
 deletButton.addEventListener('click', (clicked) => {
     clicked.preventDefault();
 	imageArray = []
+    
 	const ElemtSet = document.getElementsByClassName('image-card-a')
     const selectedCard = Array.from(ElemtSet);
 

@@ -4,7 +4,7 @@ import os
 import json
 import io
 from dotenv import load_dotenv
-
+from a_main.env.app_Logic.KeyPass import SETTINGS_KEYS
 class CloudflareR2API:
     
     def __init__(self):
@@ -12,13 +12,11 @@ class CloudflareR2API:
         ven = current_dir / "../.env"
         load_dotenv(ven)
 
-        
-        self.CFR2_TOKEN = os.environ['PM_CFR2_TOKEN']
-        self.CFR2_ACC_ID = os.environ['PM_CFR2_ACC_ID']
-        self.CFR2_ACC_KEY = os.environ['PM_CFR2_ACC_KEY']
-        self.CFR2_ENDPOINT = os.environ['PM_CFR2_ENDPOINT']
-        self.CFR2_BUCKET = os.environ['PM_CFR2_BUCKET']
-
+        self.CFR2_TOKEN = SETTINGS_KEYS.CFR2_TOKEN
+        self.CFR2_ACC_ID = SETTINGS_KEYS.CFR2_ACC_ID
+        self.CFR2_ACC_KEY = SETTINGS_KEYS.CFR2_ACC_KEY
+        self.CFR2_ENDPOINT = SETTINGS_KEYS.CFR2_ENDPOINT
+        self.CFR2_BUCKET = SETTINGS_KEYS.CFR2_BUCKET
 
         self.s3 = boto3.client(
             's3',

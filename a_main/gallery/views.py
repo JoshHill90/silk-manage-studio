@@ -336,22 +336,24 @@ def tags_image_endpoint(request):
 	if request.method == 'POST':
 		try:
 			request_data = json.loads(request.body)
-			new_images = request_data.get('imageList')
-			set_tags = request_data.get('tags')
-			tags_object = Tag.objects.all()
-			image_list = Image.objects.filter(title__in=new_images)
-		
-			for images in image_list:
-
-				for tags in set_tags:
-					tag_instance = tags_object.filter(name=tags)
-					if tag_instance:
-							tag_instance = tags_object.get(name=tags)
-					else:
-						tag_instance = tags_object.create(name=tags)
-						tag_instance.save()
+			image_data= request_data.get('imageList')
+			new_images = image_data.get('image1Set')
 			
-					images.tag.add(tag_instance.id)
+			set_tags = request_data.get('tags')
+			tag_list = []
+			image_list = []
+			for images in new_images:
+				print(images)
+				image_list.append(images.get('cloudflare_id'))
+
+			image_objects = Image.objects.filter(client_id__in=image_list)
+			for tag in set_tags:
+				tags_object = Tag.objects.get_or_create(name=tag)
+				tag_list.append(tags_object)
+			tags = Tag.objects.filter(name__in=tag_list)
+			for image in image_objects:
+				image.tag.add(*tags)
+   
 			return HttpResponse({'success':'success'})
 
 		except ValueError as e:
@@ -366,14 +368,22 @@ def gallery_image_endpoint(request):
 	if request.method == 'POST':
 		try:
 			request_data = json.loads(request.body)
-			new_images = request_data.get('imageList')
+			image_data = request_data.get('imageList')
+			new_images = image_data.get('image1Set')
+			image_query = []
+			for images in new_images:
+				image_query.append(images.get('cloudflare_id'))
+			image_objects = Image.objects.filter(cloudflare_id__in=image_query)
+			image_list = []
+			for images in image_objects:
+				print(images)
+				image_list.append(images.id)
 			set_display = request_data.get('displays')
-			print(new_images, set_display)
-			display_object =  Display.objects.all()
-			image_list = Image.objects.filter(title__in=new_images)
+			#print(new_images, set_display)
+			
 			for display in set_display:
-				display_instance =  display_object.get(id=display)
-				display_instance.images.set(image_list)
+				display_instance =  Display.objects.get(id=display)
+				display_instance.images.add(*image_list)
 
 			return HttpResponse({'success':'success'})
 

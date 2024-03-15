@@ -11,6 +11,13 @@ function clickedHide() {
   loaderWindow.style.display = 'block';
   mainWindow.style.display = 'none';
 }
+function hideLoader() {
+  loaderWindow.style.display = 'none';
+  mainWindow.style.display = 'block';
+}
+window.addEventListener('beforeunload', function() {
+  hideLoader();
+});
 
 document.addEventListener("DOMContentLoaded", function() {
   const toggleIcons = document.querySelectorAll('.header_toggle');

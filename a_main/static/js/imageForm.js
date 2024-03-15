@@ -41,7 +41,6 @@ submitButton.addEventListener( 'click', async (event) => {
 	
 	const titleElement = document.getElementById('id_title');
 	if (titleElement.value === '') {
-
         alert('Please enter a title.');
         return;
     }

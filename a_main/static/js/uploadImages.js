@@ -6,7 +6,7 @@
 const uploadButton = document.getElementById("uploadButton");
 const loaderBar = document.getElementById('dotsLoader');
 const imageUpload = document.getElementById("imageUpload");
-
+const silkID = document.getElementById('silkID')
 const url = document.getElementById('url').value;
 const uploadDiv = document.getElementById('uploadsection');
 const uploadAnimationDiv = document.getElementById('uploadAnimation');
@@ -144,7 +144,7 @@ async function uploadImages(responseData, imageFiles) {
         divCol.appendChild(nameLoader);
 
         imgMultiPart.append("file", imageFiles[fileCounter]);
-        var metadata = { "silk_id": "STJH" };
+        var metadata = { "silk_id": silkID };
         imgMultiPart.append('metadata', JSON.stringify(metadata));
         //-------------------------------//
         // for loop image direct upload 
